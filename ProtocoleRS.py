@@ -1,25 +1,27 @@
 
 # coding: utf-8
 
-# In[89]:
+# In[19]:
 
-p=17
+p=83
 F=FiniteField(p)
+L=[3,5]
+#Le choix du nombre premier est important : il faut qu'il "accepte" de petits nombres premiers dans L
 
 
-# In[1]:
+# In[2]:
 
 #packages
 from sage.databases.db_modular_polynomials import ModularPolynomialDatabase
 
 
-# In[2]:
+# In[38]:
 
 def SystemDefinition(L):
     #On cherche des données initiales ayant les bonnes propriétés.
     #A éviter : les courbes supersingulières, les j-invariants 0 et 1728, les nombres premiers divisant le discriminant
     #et la trace, les nombres premiers inertes.
-    while True :
+    for k in range(50):
         j_init=F.random_element()
         E_init=EllipticCurve_from_j(j_init)
         P=E_init.frobenius_polynomial()
@@ -31,24 +33,25 @@ def SystemDefinition(L):
         if test and E_init.is_ordinary:
             V=[]
             for l in L:
-                v=P.roots(FiniteField(l))[0][0]
-                V.append(v)
+                r_1,r_2=P.roots(FiniteField(l))
+                v_1=r_1[0]
+                v_2=r_2[0]
+                V.append((v_1,v_2))
             return j_init,V
             break
         else:
             continue
-            
-#Problème : apparemment cette condition de trace interdit parfois certains premiers, par ex. 3 ici
+    return 'Failure'
 
 
-# In[3]:
+# In[39]:
 
 def get_psi_l(l):
     DBMP=ClassicalModularPolynomialDatabase()
     return DBMP[l]
 
 
-# In[15]:
+# In[40]:
 
 def find_scaling(E_init,E_1,l):
     for a in F:
@@ -61,7 +64,7 @@ def find_scaling(E_init,E_1,l):
         except: continue
 
 
-# In[102]:
+# In[41]:
 
 #ne contrôle que la coordonnée x, donc la direction échoue si la trace est nulle
 #pour l'instant le facteur de scaling est cherché de façon exhaustive, il reste à utiliser les formules de Schoof
@@ -69,8 +72,6 @@ def find_scaling(E_init,E_1,l):
 
 #Comme dit plus haut, on soulève une exception si l'on atteint j=0 ou 1728
 
-#!!! Ce code semble ne pas fonctionner. Je constate certains retours en arrière. De plus dans certains cas le polynôme 
-#n'a pas de racines ??
 def first_step(j,l,v):
     E=EllipticCurve_from_j(j)
     pol=get_psi_l(l).subs(j0=j).univariate_polynomial()
@@ -83,7 +84,7 @@ def first_step(j,l,v):
         if not E.is_isogenous(E_1): E_1=E_1.quadratic_twist()
         E_1,phi=find_scaling(E,E_1,l)
         K_1=phi.kernel_polynomial()
-        Fext=K_1.splitting_field()
+        Fext=K_1.splitting_field('z')
         t=K_1.roots(Fext)[0][0]
         f_1=E.multiplication_by_m(Integer(v),x_only=True)
         assert t**p==f_1(t) #ici t est l'abscisse d'un point de la courbe qui est dans Ker(phi)
@@ -94,7 +95,7 @@ def first_step(j,l,v):
         return j_2
 
 
-# In[103]:
+# In[42]:
 
 #Comme dit plus haut, on soulève une exception si l'on atteint j=0 ou 1728
 def following_step(j,l,j_prec):
@@ -107,7 +108,7 @@ def following_step(j,l,j_prec):
     return j_1
 
 
-# In[7]:
+# In[43]:
 
 def RouteComputation(j_init,R,L,V):
     #j_init : le j-invariant de la courbe initiale
@@ -120,7 +121,14 @@ def RouteComputation(j_init,R,L,V):
         v=V[n]
         r=R[n]
         if r>0:
-            j_1=first_step(j_0,l,v)
+            j_1=first_step(j_0,l,v[0])
+            for k in range(1,r):
+                j_2=following_step(j_1,l,j_0)
+                j_0=j_1
+                j_1=j_2
+            j_0=j_1
+        elif r<0:
+            j_1=first_step(j_0,l,v[1])
             for k in range(1,r):
                 j_2=following_step(j_1,l,j_0)
                 j_0=j_1
@@ -131,12 +139,47 @@ def RouteComputation(j_init,R,L,V):
     return j_0
 
 
-# In[11]:
+# In[71]:
 
-#utilisé dans IsogenyGraph
-#Comme dit plus haut, on soulève une exception si l'on atteint j=0 ou 1728
+def CryptosystemParameters(L):
+    k=3
+    j_init,V=SystemDefinition(L)
+    R_priv=[]
+    for i in range(len(L)):
+        r=ZZ.random_element(-k,k+1)
+        R_priv.append(r)
+    j_pub=RouteComputation(j_init,R_priv,L,V)
+    return j_init,j_pub,k,L,V,R_priv
 
-#Remarque : on pourrait réutiliser le code de followingstep pour construire IsogenyGraph
+
+# In[45]:
+
+def Encrypt(j_pub,m,k,L,V):
+    R_enc=[]
+    for i in range(len(L)):
+        r=ZZ.random_element(-k,k+1)
+        R_enc.append(r)
+    j_enc=RouteComputation(j_pub,R_enc,L,V)
+    s=m*j_enc
+    j_add=RouteComputation(j_init,R_enc,L,V)
+    return s,j_add
+
+
+# In[46]:
+
+def Decrypt(s,j_add,L,V,R_priv):
+    j_enc=RouteComputation(j_add,R_priv,L,V)
+    m=s/j_enc
+    return m
+
+
+# In[64]:
+
+#Calcul du graphe d'isogénies
+
+
+# In[65]:
+
 def neighbors(j,l):
     pol=get_psi_l(l).subs(j0=j).univariate_polynomial()
     assert j<>0 and j<>1728
@@ -146,9 +189,8 @@ def neighbors(j,l):
     return j_1,j_2
 
 
-# In[12]:
+# In[66]:
 
-#utile pour la fonction qui suit
 def update(D,j_1,j_2,l):
     if j_1 in D.keys():
         D[j_1][j_2]=l
@@ -156,7 +198,7 @@ def update(D,j_1,j_2,l):
         D[j_1]={j_2: l}
 
 
-# In[64]:
+# In[67]:
 
 def IsogenyGraphComponent(j_0,L):
     #on construit un graphe au format "dict_of_dicts". L est une liste non vide de (petits) premiers totalement scindés 
@@ -180,10 +222,8 @@ def IsogenyGraphComponent(j_0,L):
     G=Graph(Dict,format='dict_of_dicts')
     return G
 
-#A faire ? Si il y a plusieurs cycles, on veut peut-être tous les points ?
 
-
-# In[72]:
+# In[68]:
 
 def CompleteIsogenyGraph(L):
     #On trace ici un graphe simple non orienté : on ignore donc les multiplicités pour j=0 et 1728
@@ -198,19 +238,6 @@ def CompleteIsogenyGraph(L):
                 Dict[j][j_1]=l
     G=Graph(Dict,format='dict_of_dicts')
     return G
-
-
-# In[96]:
-
-A.<x>=QQ[]
-P=(x**2+1)(x**2-2)
-B.<t>=P.splitting_field()
-P(t)
-
-
-# In[101]:
-
-P.roots(B)
 
 
 # In[ ]:
