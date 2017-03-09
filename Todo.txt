@@ -1,0 +1,14 @@
+Restent à prouver :
+- les propriétés du polynôme modulaire
+- les propriétés des valeurs propres du frobenius
+- la relation entre isogénie définie sur F_p et nombre de points sur F_p (théorème de Tate)
+
+D'un point de vue software :
+- texmaker
+- le cours d'Unix
+
+Sur l'efficacité du protocole :
+- l'algorithme de Schoof pour déterminer le facteur de scaling
+- l'algorithme de Couveignes pour déterminer le facteur de scaling
+- la variante avec point mapping
+- un moyen de déterminer directement le bon twist de la courbe image ?
