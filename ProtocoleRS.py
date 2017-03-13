@@ -1,21 +1,23 @@
 
 # coding: utf-8
 
-# In[19]:
-
-p=83
-F=FiniteField(p)
-L=[3,5]
-#Le choix du nombre premier est important : il faut qu'il "accepte" de petits nombres premiers dans L
-
-
-# In[2]:
+# In[25]:
 
 #packages
 from sage.databases.db_modular_polynomials import ModularPolynomialDatabase
 
 
-# In[38]:
+# In[166]:
+
+p=next_prime(2**70)
+F=FiniteField(p)
+L=[7,11]
+#Le choix du nombre premier est important : il faut qu'il "accepte" de petits nombres premiers dans L
+DBMP=ClassicalModularPolynomialDatabase()
+DBAP=AtkinModularPolynomialDatabase()
+
+
+# In[53]:
 
 def SystemDefinition(L):
     #On cherche des données initiales ayant les bonnes propriétés.
@@ -41,30 +43,45 @@ def SystemDefinition(L):
             break
         else:
             continue
-    return 'Failure'
+    raise ValueError, "Parameters not found"
 
 
-# In[39]:
+# In[28]:
 
 def get_psi_l(l):
-    DBMP=ClassicalModularPolynomialDatabase()
     return DBMP[l]
 
 
-# In[40]:
+# In[29]:
 
-def find_scaling(E_init,E_1,l):
-    for a in F:
-        try:
-            assert a<>0
-            E_2=E_1.scale_curve(a)
-            phi=EllipticCurveIsogeny(E_init,None,E_2,degree=l)
-            return E_2,phi
-            break
-        except: continue
+def get_atk_l(l):
+    return DBAP[l]
 
 
-# In[41]:
+# In[33]:
+
+def NormalizedIsogenousWE(j,jprime,A,B,l):
+    P=PolynomialRing(F,"X,J")
+    X,J=P.gens()
+    Atk_l=P(get_atk_l(l))
+    fs=Atk_l(X,j).gcd(Atk_l(X,jprime)).univariate_polynomial().roots(multiplicities=False)
+    if fs==[]:
+        raise ValueError, "Curves are not " + l + "-isogenous."
+    else:
+        f=fs[0]
+    #Elkies' formulae
+    dX=f*Atk_l.derivative(X)(f,j)
+    dJ=j*Atk_l.derivative(J)(f,j)
+    dX2=f*Atk_l.derivative(X)(f,jprime)
+    dJ2=l*jprime*Atk_l.derivative(J)(f,jprime)
+    jj=jprime/(jprime-1728)
+    
+    Aprime = -F(27)/F(4) * l**4 * (dX2**2 * dJ**2 * B**2) / (dJ2**2 * dX**2 * A**2) * jj
+    Bprime = -F(27)/F(4) * l**6 * (dX2**3 * dJ**3 * B**3) / (dJ2**3 * dX**3 * A**3) * jj
+    return Aprime,Bprime
+
+
+# In[62]:
 
 #ne contrôle que la coordonnée x, donc la direction échoue si la trace est nulle
 #pour l'instant le facteur de scaling est cherché de façon exhaustive, il reste à utiliser les formules de Schoof
@@ -72,74 +89,77 @@ def find_scaling(E_init,E_1,l):
 
 #Comme dit plus haut, on soulève une exception si l'on atteint j=0 ou 1728
 
-def first_step(j,l,v):
-    E=EllipticCurve_from_j(j)
+#On utilise les polynômes modulaires d'Atkin, cette méthode nécessite p\neq 2,3 (?)
+
+def first_step(j,A,B,l,v):
+    E=EllipticCurve([A,B])
     pol=get_psi_l(l).subs(j0=j).univariate_polynomial()
-    (r_1,r_2)=pol.roots()
-    j_1=r_1[0]
-    j_2=r_2[0]
+    j_1,j_2=pol.roots(multiplicities=False)
     assert j_1<>0 and j_1<>1728 and j_2<>0 and j_2<>1728
     try:
-        E_1=EllipticCurve_from_j(j_1)
-        if not E.is_isogenous(E_1): E_1=E_1.quadratic_twist()
-        E_1,phi=find_scaling(E,E_1,l)
+        A_1,B_1=NormalizedIsogenousWE(j,j_1,A,B,l)
+        E_1=EllipticCurve([A_1,B_1])
+        phi=EllipticCurveIsogeny(E,None,E_1,l)
         K_1=phi.kernel_polynomial()
         Fext=K_1.splitting_field('z')
-        t=K_1.roots(Fext)[0][0]
+        t=K_1.roots(Fext,multiplicities=False)[0]
         f_1=E.multiplication_by_m(Integer(v),x_only=True)
         assert t**p==f_1(t) #ici t est l'abscisse d'un point de la courbe qui est dans Ker(phi)
-        return j_1
-    except AssertionError:#ZeroDivisionError?
-        E_2=EllipticCurve_from_j(j_2)
-        if not E.is_isogenous(E_2): E_2=E_2.quadratic_twist()
-        return j_2
+        return j_1,A_1,B_1
+    except AssertionError:  #ZeroDivisionError?
+        A_2,B_2=NormalizedIsogenousWE(j,j_2,A,B,l)
+        return j_2,A_2,B_2
 
 
-# In[42]:
+# In[67]:
 
 #Comme dit plus haut, on soulève une exception si l'on atteint j=0 ou 1728
-def following_step(j,l,j_prec):
+def following_step(j,j_prec,A,B,l):
     pol=get_psi_l(l).subs(j0=j).univariate_polynomial()
     j1=pol.parent().gen()
     P=pol//(j1-j_prec)
-    r_1=P.roots()
-    j_1=r_1[0][0]
+    r_1=P.roots(multiplicities=False)
+    j_1=r_1[0]
     assert j_1<>0 and j_1<>1728
-    return j_1
+    A_1,B_1=NormalizedIsogenousWE(j,j_1,A,B,l)
+    return j_1,A_1,B_1
 
 
-# In[43]:
+# In[113]:
 
 def RouteComputation(j_init,R,L,V):
     #j_init : le j-invariant de la courbe initiale
     #L : la liste de nombres premiers considérés
     #R : la route, i.e. liste du nombre de pas pour chaque nombre premier
-    #V : la liste des valeurs propres donnant le sens positif
-    j_0=j_init
+    #V : la liste des couples de valeurs propres donnant l'orientation
+    E_init = EllipticCurve_from_j(j_init)
+    E_init = E_init.short_weierstrass_model()
+    _,_,_, A_init, B_init = E_init.a_invariants()
+    j_0, A_0, B_0 = j_init, A_init, B_init
     for n in range(len(L)):
         l=L[n]
         v=V[n]
         r=R[n]
         if r>0:
-            j_1=first_step(j_0,l,v[0])
+            j_1, A_1, B_1=first_step(j_0, A_0, B_0, l, v[0])
             for k in range(1,r):
-                j_2=following_step(j_1,l,j_0)
-                j_0=j_1
-                j_1=j_2
-            j_0=j_1
+                j_2, A_2, B_2=following_step(j_1, j_0, A_1, B_1, l)
+                j_0, A_0, B_0 = j_1, A_1, B_1
+                j_1, A_1, B_1 = j_2, A_2, B_2
+            j_0, A_0, B_0 = j_1, A_1, B_1
         elif r<0:
-            j_1=first_step(j_0,l,v[1])
-            for k in range(1,r):
-                j_2=following_step(j_1,l,j_0)
-                j_0=j_1
-                j_1=j_2
-            j_0=j_1
+            j_1, A_1, B_1=first_step(j_0, A_0, B_0, l, v[1])
+            for k in range(1,-r):
+                j_2, A_2, B_2=following_step(j_1, j_0, A_1, B_1, l)
+                j_0, A_0, B_0 = j_1, A_1, B_1
+                j_1, A_1, B_1 = j_2, A_2, B_2
+            j_0, A_0, B_0 = j_1, A_1, B_1
         else:
             pass
     return j_0
 
 
-# In[71]:
+# In[65]:
 
 def CryptosystemParameters(L):
     k=3
@@ -152,7 +172,7 @@ def CryptosystemParameters(L):
     return j_init,j_pub,k,L,V,R_priv
 
 
-# In[45]:
+# In[38]:
 
 def Encrypt(j_pub,m,k,L,V):
     R_enc=[]
@@ -165,7 +185,7 @@ def Encrypt(j_pub,m,k,L,V):
     return s,j_add
 
 
-# In[46]:
+# In[39]:
 
 def Decrypt(s,j_add,L,V,R_priv):
     j_enc=RouteComputation(j_add,R_priv,L,V)
@@ -173,12 +193,18 @@ def Decrypt(s,j_add,L,V,R_priv):
     return m
 
 
-# In[64]:
+# In[40]:
+
+#Variante avec point mapping : pour l'implémenter, il faut calculer l'isogénie à chaque pas, ce qui n'est pas raisonnable
+#avec la fonction actuelle find_scaling
+
+
+# In[41]:
 
 #Calcul du graphe d'isogénies
 
 
-# In[65]:
+# In[42]:
 
 def neighbors(j,l):
     pol=get_psi_l(l).subs(j0=j).univariate_polynomial()
@@ -189,7 +215,7 @@ def neighbors(j,l):
     return j_1,j_2
 
 
-# In[66]:
+# In[43]:
 
 def update(D,j_1,j_2,l):
     if j_1 in D.keys():
@@ -198,7 +224,7 @@ def update(D,j_1,j_2,l):
         D[j_1]={j_2: l}
 
 
-# In[67]:
+# In[90]:
 
 def IsogenyGraphComponent(j_0,L):
     #on construit un graphe au format "dict_of_dicts". L est une liste non vide de (petits) premiers totalement scindés 
@@ -215,15 +241,15 @@ def IsogenyGraphComponent(j_0,L):
         update(Dict,j_0,j_1,l)
         j=j_1
         while j<>j_0:
-            j_1=following_step(j,l,j_prec)
+            j_1,j_2=neighbors(j,l)
+            if j_1==j_prec : j_1,j_2=j_2,j_1
             update(Dict,j,j_1,l)
-            j_prec=j
-            j=j_1
+            j_prec,j=j,j_1
     G=Graph(Dict,format='dict_of_dicts')
     return G
 
 
-# In[68]:
+# In[45]:
 
 def CompleteIsogenyGraph(L):
     #On trace ici un graphe simple non orienté : on ignore donc les multiplicités pour j=0 et 1728
@@ -238,6 +264,27 @@ def CompleteIsogenyGraph(L):
                 Dict[j][j_1]=l
     G=Graph(Dict,format='dict_of_dicts')
     return G
+
+
+# In[46]:
+
+#Une meilleure idée serait peut-être de faire agir le groupe de classe de O_D pour déterminer les courbes intéressantes
+#à faire apparaître dans le graphe
+
+
+# In[167]:
+
+j_init,j_pub,k,L,V,R_priv=CryptosystemParameters(L)
+
+
+# In[169]:
+
+j_init,R_priv
+
+
+# In[170]:
+
+get_ipython().magic(u'timeit RouteComputation(j_init,R_priv,L,V)')
 
 
 # In[ ]:
