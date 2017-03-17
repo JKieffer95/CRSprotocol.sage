@@ -1,14 +1,10 @@
 Restent à prouver :
-- les propriétés du polynôme modulaire
-- les propriétés des valeurs propres du frobenius
+- les propriétés des polynôme modulaires
 - la relation entre isogénie définie sur F_p et nombre de points sur F_p (théorème de Tate)
-
-D'un point de vue software :
-- texmaker
-- le cours d'Unix
+- les théorèmes de relèvement de Deuring et les résultats sur \C pour justifier les formules de Vélu et autres
 
 Sur l'efficacité du protocole :
-- l'algorithme de Schoof pour déterminer le facteur de scaling
-- l'algorithme de Couveignes pour déterminer le facteur de scaling
-- la variante avec point mapping
-- un moyen de déterminer directement le bon twist de la courbe image ?
+- Comment trouver une courbe avec beaucoup de torsion rationnelle ?
+- Peut-on à la place demander de la torsion sur une petite extension ?
+- Ecrire explicitement les équations de Vélu pour la courbe image ?
+- Early abort dans SEA ?
