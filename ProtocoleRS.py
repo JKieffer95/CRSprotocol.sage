@@ -7,17 +7,17 @@
 from sage.databases.db_modular_polynomials import ModularPolynomialDatabase
 
 
-# In[59]:
+# In[2]:
 
-p=next_prime(next_prime(1000))
+p=next_prime(next_prime(2**50))
 K=FiniteField(p)
-L=[23,29]
+L=[11,23,29,59]
 #Le choix du nombre premier est important : il faut qu'il "accepte" de petits nombres premiers dans L
 DBMP=ClassicalModularPolynomialDatabase()
 DBAP=AtkinModularPolynomialDatabase()
 
 
-# In[57]:
+# In[3]:
 
 def SystemDefinition(L):
     #On cherche des données initiales ayant les bonnes propriétés.
@@ -64,7 +64,9 @@ def NormalizedIsogenousWE(j,jprime,A,B,l):
     P=PolynomialRing(K,"X,J")
     X,J=P.gens()
     Atk_l=P(get_atk_l(l))
-    fs=Atk_l(X,j).gcd(Atk_l(X,jprime)).univariate_polynomial().roots(multiplicities=False)
+    Pol_1=Atk_l(X,j).univariate_polynomial()
+    Pol_2=Atk_l(X,jprime).univariate_polynomial()
+    fs=Pol_1.gcd(Pol_2).roots(multiplicities=False)
     if fs==[]:
         raise ValueError, "Curves are not " + l + "-isogenous."
     else:
@@ -84,12 +86,10 @@ def NormalizedIsogenousWE(j,jprime,A,B,l):
 # In[7]:
 
 #ne contrôle que la coordonnée x, donc la direction échoue si la trace est nulle
-#pour l'instant le facteur de scaling est cherché de façon exhaustive, il reste à utiliser les formules de Schoof
-#pour déterminer le facteur de scaling directement
 
 #Comme dit plus haut, on soulève une exception si l'on atteint j=0 ou 1728
 
-#On utilise les polynômes modulaires d'Atkin, cette méthode nécessite p\neq 2,3 (?)
+#On utilise les polynômes modulaires d'Atkin, cette méthode nécessite p\neq 2,3 (?) Cela pose des problèmes pour l grand.
 
 def first_step(j,A,B,l,v):
     E=EllipticCurve([A,B])
@@ -195,16 +195,10 @@ def Decrypt(s,j_add,L,V,R_priv):
 
 # In[13]:
 
-#Variante avec point mapping : pour l'implémenter, il faut calculer l'isogénie à chaque pas, ce qui n'est pas raisonnable
-#avec la fonction actuelle find_scaling
+#Calcul du graphe d'isogénies (à utiliser pour p petit)
 
 
 # In[14]:
-
-#Calcul du graphe d'isogénies
-
-
-# In[15]:
 
 def neighbors(j,l):
     pol=get_psi_l(l).subs(j0=j).univariate_polynomial()
@@ -215,7 +209,7 @@ def neighbors(j,l):
     return j_1,j_2
 
 
-# In[16]:
+# In[15]:
 
 def update(D,j_1,j_2,l):
     if j_1 in D.keys():
@@ -224,7 +218,7 @@ def update(D,j_1,j_2,l):
         D[j_1]={j_2: l}
 
 
-# In[17]:
+# In[16]:
 
 def IsogenyGraphComponent(j_0,L):
     #on construit un graphe au format "dict_of_dicts". L est une liste non vide de (petits) premiers totalement scindés 
@@ -249,7 +243,7 @@ def IsogenyGraphComponent(j_0,L):
     return G
 
 
-# In[18]:
+# In[17]:
 
 def CompleteIsogenyGraph(L):
     #On trace ici un graphe simple non orienté : on ignore donc les multiplicités pour j=0 et 1728
@@ -266,19 +260,20 @@ def CompleteIsogenyGraph(L):
     return G
 
 
-# In[19]:
+# In[18]:
 
 #Une meilleure idée serait peut-être de faire agir le groupe de classe de O_D pour déterminer les courbes intéressantes
 #à faire apparaître dans le graphe
 
 
-# In[20]:
+# In[19]:
 
 #En utilisant les polynômes modulaires d'Atkin
 
 
-# In[40]:
+# In[20]:
 
+#Ce code suppose que les polynômes modulaires d'Atkin ont exactement le "bon" nombre de racines, ce qui demande démo
 def Atkin_first_step(j,A,B,l,v):
     E=EllipticCurve([A,B])
     Ann=PolynomialRing(K,"F,J")
@@ -306,7 +301,7 @@ def Atkin_first_step(j,A,B,l,v):
         return j_2,A_2,B_2
 
 
-# In[41]:
+# In[21]:
 
 def Atkin_following_step(j,j_prec,A,B,l):
     Ann=PolynomialRing(K,"F,J")
@@ -324,7 +319,7 @@ def Atkin_following_step(j,j_prec,A,B,l):
     return j_1,A_1,B_1
 
 
-# In[42]:
+# In[22]:
 
 def AtkinRouteComputation(j_init,R,L,V):
     #j_init : le j-invariant de la courbe initiale
@@ -358,40 +353,148 @@ def AtkinRouteComputation(j_init,R,L,V):
     return j_0
 
 
-# In[60]:
+# In[24]:
 
-j_init,j_pub,k,L,V,R_priv=CryptosystemParameters(L)
-
-
-# In[61]:
-
-j_init,R_priv
+#En utilisant des courbes ayant de la torsion rationnelle
 
 
-# In[62]:
+# In[118]:
 
-get_ipython().magic(u'timeit RouteComputation(j_init,R_priv,L,V)')
-
-
-# In[65]:
-
-E=EllipticCurve_from_j(j_init)
-E=E.short_weierstrass_model()
-_,_,_,A,B=E.a_invariants()
-Atkin_first_step(j_init,A,B,23,V[0][0])
+#Paramètres
+p=next_prime(10000)
+K=FiniteField(p)
+L=[5,7,11]
 
 
-# In[66]:
+# In[218]:
 
-first_step(j_init,A,B,23,V[0][0])
+def FindGoodCurve(L,N):
+    for k in range(N):
+        try:
+            j_0=K.random_element()
+            E_0=EllipticCurve_from_j(j_0)
+            E_0=E_0.short_weierstrass_model()
+            P=E_0.frobenius_polynomial()
+            Trace=-P[1]
+            Discr=P.discriminant()
+            Card=p+1
+            for l in L:
+                assert kronecker_symbol(Discr,l)==1 and Trace%l==(p+1)%l #Assure la présence de l-torsion rationnelle
+            return E_0,Card
+            break
+        except AssertionError:
+            continue
 
 
-# In[67]:
+# In[84]:
 
-get_ipython().magic(u'timeit AtkinRouteComputation(j_init,R_priv,L,V)')
+def FindGoodPrimes(j_0):
+    E_0=EllipticCurve_from_j(j_0)
+    P=E_0.frobenius_polynomial()
+    Trace=-P[1]
+    Discr=P.discriminant()
+    return [l for l in prime_range(100) if (kronecker_symbol(Discr,l)==1 and Trace%l==(p+1)%l)]
 
 
-# In[ ]:
+# In[242]:
+
+def FindGoodLength(r,N):
+    for k in range(N):
+        if k%10000==0: print k
+        j=K.random_element()
+        L=FindGoodPrimes(j)
+        if len(L)<r:
+            continue
+        else:
+            E=EllipticCurve_from_j(j)
+            Card=E.cardinality()
+            return E,L,Card
+            break
 
 
+# In[217]:
+
+def FindRationalTorsion(E,l,Card):
+    Cofactor=Card//l
+    for k in range(10):
+        try:
+            P=E.random_point()
+            Q=Cofactor*P
+            assert not Q.is_zero()
+            return Q
+            break
+        except AssertionError:
+            continue
+
+
+# In[115]:
+
+def TorsionPoints(E,L,Card):
+    return [FindRationalTorsion(E,l,Card) for l in L]
+
+
+# In[309]:
+
+def StepWithTorsion(E,L,T,Card,i):
+    Q=T[i]
+    phi=EllipticCurveIsogeny(E,kernel=Q,degree=L[i])
+    Eprime=phi.codomain()
+    f,g=phi.rational_maps()
+    for k in range(len(L)):
+        if k<>i:
+            Q_k=T[k]
+            x_k,y_k,z_k=Q_k[0],Q_k[1],Q_k[2]
+            assert z_k==1
+            Q_kprime=Eprime.point([f(x_k,y_k),g(x_k,y_k)])
+            Tprime.append(Q_kprime)
+        else:
+            Qprime=FindRationalTorsion(Eprime,L[i],Card)
+            Tprime.append(Qprime)
+    return Eprime,Tprime
+
+
+# In[312]:
+
+def StepWithTorsion_x(E,L,T,Card,i):
+    Q=T[i]
+    phi=EllipticCurveIsogeny(E,kernel=Q,degree=L[i])
+    Eprime=phi.codomain()
+    f=phi.x_rational_map()
+    for k in range(len(L)):
+        if k<>i:
+            Q_k=T[k]
+            x_k,y_k,z_k=Q_k[0],Q_k[1],Q_k[2]
+            assert z_k==1
+            Q_kprime=Eprime.lift_x(f(x_k))
+            Tprime.append(Q_kprime)
+        else:
+            Qprime=FindRationalTorsion(Eprime,L[i],Card)
+            Tprime.append(Qprime)
+    return Eprime,Tprime
+
+
+# In[349]:
+
+def StepWithoutRationalMaps(E,L,Card,i):
+    Q=FindRationalTorsion(E,L[i],Card)
+    phi=EllipticCurveIsogeny(E,kernel=Q,degree=L[i])
+    return phi.codomain()
+
+
+# In[183]:
+
+def RouteWithTorsion(E_init,L,T_init,Card,R):
+    #R est la liste du nombre de pas à effectuer pour chaque nombre premier, un entier positif
+    E,T=E_init,T_init
+    for i in range(len(L)):
+        for k in range(R[i]):
+            E,T=StepWithTorsion(E,L,T,Card,i)
+    return E,T
+
+
+# In[354]:
+
+#Tests
+p=next_prime(2**300)
+K=FiniteField(p)
 
