@@ -1,10 +1,6 @@
-Restent à prouver :
-- les propriétés des polynôme modulaires
-- la relation entre isogénie définie sur F_p et nombre de points sur F_p (théorème de Tate)
-- les théorèmes de relèvement de Deuring et les résultats sur \C pour justifier les formules de Vélu et autres
+En ce moment :
+-Essayer de trouver des courbes intéressantes avec de la torsion
+-S'intéresser à l'algorithme SEA
+-Aérer le code
+-Continuer le fichier tex.
 
-Sur l'efficacité du protocole :
-- Comment trouver une courbe avec beaucoup de torsion rationnelle ?
-- Peut-on à la place demander de la torsion sur une petite extension ?
-- Ecrire explicitement les équations de Vélu pour la courbe image ?
-- Early abort dans SEA ?
