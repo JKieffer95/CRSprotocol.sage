@@ -4,6 +4,7 @@
 # In[ ]:
 
 from sage.all import *
+from BMSS import *
 
 
 # In[19]:
@@ -11,7 +12,7 @@ from sage.all import *
 #On cherche des données initiales ayant les bonnes propriétés.
 #A éviter : les courbes supersingulières, les j-invariants 0 et 1728, les nombres premiers divisant le discriminant
 #et la trace, les nombres premiers inertes.
-
+#A utiliser pour p petit
 def SystemDefinition(L,K):
     """Cette fonction prend en argument :
     -une liste de nombres premiers L,
@@ -44,6 +45,7 @@ def SystemDefinition(L,K):
 
 # In[15]:
 
+#70% du calcul est occupé par les conversions et substitutions de polynômes
 def NormalizedIsogenousWE(j,jprime,A,B,l,Atk_l):
     """Cette fonction prend en argument :
     -j, le j-invariant de la courbe source
@@ -76,11 +78,10 @@ def NormalizedIsogenousWE(j,jprime,A,B,l,Atk_l):
 # In[16]:
 
 #ne contrôle que la coordonnée x, donc la direction échoue si la trace est nulle
-
 #Comme dit plus haut, on soulève une exception si l'on atteint j=0 ou 1728
 #On utilise les polynômes modulaires classiques.
-
-def first_step(j,A,B,l,Psi_l,Atk_l,v):
+#Obsolète, utiliser StepBMSS
+def FirstStep(j,A,B,l,Psi_l,Atk_l,v):
     """Cette fonction prend en argument :
     -j, le j-invariant de la courbe initiale
     -A,B, les coefficients de l'équation de Weierstrass de la courbe initiale
@@ -109,6 +110,42 @@ def first_step(j,A,B,l,Psi_l,Atk_l,v):
     except AssertionError:  #ZeroDivisionError?
         A_2,B_2=NormalizedIsogenousWE(j,j_2,A,B,l,Atk_l)
         return j_2,A_2,B_2
+
+
+# In[1]:
+
+#Les substitutions et conversions de polynômes prennent le plus de temps
+def StepBMSS(E,l,Psi_l,Atk_l,v):
+    """Cette fonction prend en argument :
+    -E, la courbe elliptique initiale
+    -l, le degré de l'isogénie
+    -Psi_l, le polynôme modulaire classique de degré l
+    -Atk_l, le polynôme modulaire d'Atkin
+    -v, la valeur propre du Frobenius mod l cherchée
+    et renvoie la courbe cible."""
+    K=E.base_field()
+    p=K.cardinality()
+    _,_,_,A,B=E.a_invariants()
+    j=E.j_invariant()
+    X_1,X_2=Psi_l.parent().gens()
+    pol=Psi_l(j,X_2).univariate_polynomial()
+    j_1,j_2=pol.roots(multiplicities=False)
+    assert j_1<>0 and j_1<>1728 and j_2<>0 and j_2<>1728
+    try:
+        A_1,B_1=NormalizedIsogenousWE(j,j_1,A,B,l,Atk_l)
+        E_1=EllipticCurve([A_1,B_1])
+        K_1=isogeny_kernel(E,E_1,l)
+        Pol_ring=PolynomialRing(K,'X')
+        X=Pol_ring.gen()
+        Quo_ring=Pol_ring.quotient(K_1)
+        Xbar=Quo_ring.gen()
+        f_1=E.multiplication_by_m(Integer(v),x_only=True)
+        assert Xbar**p==f_1(Xbar) #ici t est l'abscisse d'un point de la courbe qui est dans Ker(phi)
+        return E_1
+    except AssertionError:  #ZeroDivisionError?
+        A_2,B_2=NormalizedIsogenousWE(j,j_2,A,B,l,Atk_l)
+        E_2=EllipticCurve([A_2,B_2])
+        return E_2
 
 
 # In[154]:
@@ -173,43 +210,6 @@ def RouteComputation(j_init,R,L,V,DBC,DBA):
     return j_0
 
 
-# In[156]:
-
-def CryptosystemParameters(L):
-    """Obsolète"""
-    k=3
-    j_init,V=SystemDefinition(L)
-    R_priv=[]
-    for i in range(len(L)):
-        r=ZZ.random_element(-k,k+1)
-        R_priv.append(r)
-    j_pub=RouteComputation(j_init,R_priv,L,V)
-    return j_init,j_pub,k,L,V,R_priv
-
-
-# In[157]:
-
-def Encrypt(j_pub,m,k,L,V):
-    """Obsolète"""
-    R_enc=[]
-    for i in range(len(L)):
-        r=ZZ.random_element(-k,k+1)
-        R_enc.append(r)
-    j_enc=RouteComputation(j_pub,R_enc,L,V)
-    s=m*j_enc
-    j_add=RouteComputation(j_init,R_enc,L,V)
-    return s,j_add
-
-
-# In[158]:
-
-def Decrypt(s,j_add,L,V,R_priv):
-    """Obsolète"""
-    j_enc=RouteComputation(j_add,R_priv,L,V)
-    m=s/j_enc
-    return m
-
-
 # In[159]:
 
 #Calcul du graphe d'isogénies (à utiliser pour p petit)
@@ -238,6 +238,7 @@ def update(D,j_1,j_2,l):
 
 # In[162]:
 
+#p<1000 uniquement
 def IsogenyGraphComponent(j_0,L,DBC):
     """Cette fonction prend en argument :
     -j_0, le j-invariant de la courbe initiale,
@@ -267,30 +268,6 @@ def IsogenyGraphComponent(j_0,L,DBC):
     return G
 
 
-# In[163]:
-
-def CompleteIsogenyGraph(L):
-    """Obsolète"""
-    #On trace ici un graphe simple non orienté : on ignore donc les multiplicités pour j=0 et 1728
-    #On relie deux j-invariants par une arête labellisée 'l' si les deux courbes sont liées par une isogénie de degré l
-    Dict={}
-    for j in K:
-        Dict[j]={}
-    for l in L:
-        psi_l=get_psi_l(l)
-        for j in F:
-            for (j_1,_) in psi_l.subs(j0=j).univariate_polynomial().roots():
-                Dict[j][j_1]=l
-    G=Graph(Dict,format='dict_of_dicts')
-    return G
-
-
-# In[164]:
-
-#Une meilleure idée serait peut-être de faire agir le groupe de classe de O_D pour déterminer les courbes intéressantes
-#à faire apparaître dans le graphe
-
-
 # In[165]:
 
 #En utilisant les polynômes modulaires d'Atkin
@@ -298,7 +275,7 @@ def CompleteIsogenyGraph(L):
 
 # In[166]:
 
-#Ce code suppose que les polynômes modulaires d'Atkin ont exactement le "bon" nombre de racines, ce qui demande démo
+#Ce code suppose que les polynômes modulaires d'Atkin ont exactement le "bon" nombre de racines, ce qui n'est pas clair
 def Atkin_first_step(j,A,B,l,Atk_l,v):
     """Cette fonction prend en argument :
     -j, le j-invariant de la courbe initiale
@@ -335,6 +312,7 @@ def Atkin_first_step(j,A,B,l,Atk_l,v):
 
 # In[167]:
 
+#Même remarque
 def Atkin_following_step(j,j_prec,A,B,l, Atk_l):
     """Cette fonction prend en argument :
     -j, le j-invariant actuel
@@ -401,6 +379,7 @@ def AtkinRouteComputation(j_init,R,L,DBA,V):
 
 # In[170]:
 
+#A utiliser avec p petit
 def FindGoodCurve(L,N,K):
     """Cette fonction prend en argument :
     -L, liste de nombres premiers \neq 2
@@ -441,6 +420,7 @@ def FindGoodPrimes(j_0):
 
 # In[172]:
 
+#r=1 ou 2 si p est grand
 def FindGoodLength(r,N,K):
     """Cette fonction prend en argument :
     -r, un entier positif
@@ -461,6 +441,7 @@ def FindGoodLength(r,N,K):
 
 # In[173]:
 
+#Réécrire la multiplication des points ??
 def FindRationalTorsion(E,l,Card):
     """Cette fonction prend en argument :
     -E, une courbe elliptique
@@ -490,73 +471,9 @@ def TorsionPoints(E,L,Card):
     return [FindRationalTorsion(E,l,Card) for l in L]
 
 
-# In[1]:
-
-def StepWithTorsion_obs(E,L,T,Card,i):
-    """Obsolète"""
-    Q=T[i]
-    phi=EllipticCurveIsogeny(E,kernel=Q,degree=L[i])
-    Eprime=phi.codomain()
-    f,g=phi.rational_maps()
-    Tprime=[]
-    for k in range(len(L)):
-        if k<>i:
-            Q_k=T[k]
-            x_k,y_k,z_k=Q_k[0],Q_k[1],Q_k[2]
-            assert z_k==1
-            Q_kprime=Eprime.point([f(x_k,y_k),g(x_k,y_k)])
-            Tprime.append(Q_kprime)
-        else:
-            Qprime=FindRationalTorsion(Eprime,L[i],Card)
-            Tprime.append(Qprime)
-    return Eprime,Tprime
-
-
-# In[176]:
-
-def StepWithTorsion_x_obs(E,L,T,Card,i):
-    """Obsolète"""
-    Q=T[i]
-    phi=EllipticCurveIsogeny(E,kernel=Q,degree=L[i])
-    Eprime=phi.codomain()
-    f=phi.x_rational_map()
-    Tprime=[]
-    for k in range(len(L)):
-        if k<>i:
-            Q_k=T[k]
-            x_k,y_k,z_k=Q_k[0],Q_k[1],Q_k[2]
-            assert z_k==1
-            Q_kprime=Eprime.lift_x(f(x_k))
-            Tprime.append(Q_kprime)
-        else:
-            Qprime=FindRationalTorsion(Eprime,L[i],Card)
-            Tprime.append(Qprime)
-    return Eprime,Tprime
-
-
-# In[177]:
-
-def StepWithoutRationalMaps_obs(E,L,Card,i):
-    """Obsolète"""
-    Q=FindRationalTorsion(E,L[i],Card)
-    phi=EllipticCurveIsogeny(E,kernel=Q,degree=L[i])
-    return phi.codomain()
-
-
-# In[178]:
-
-def RouteWithTorsion_obs(E_init,L,T_init,Card,R):
-    """Obsolète"""
-    #R est la liste du nombre de pas à effectuer pour chaque nombre premier, un entier positif
-    E,T=E_init,T_init
-    for i in range(len(L)):
-        for k in range(R[i]):
-            E,T=StepWithTorsion(E,L,T,Card,i)
-    return E,T
-
-
 # In[3]:
 
+#99% du calcul est A=K['X']
 def SubgroupPolynomial(E,Q,l): #Suppose que E est sous forme de Weierstrass, et Q est un point d'ordre premier l
     """Fonction auxiliaire"""
     K=E.base_field()
@@ -574,6 +491,7 @@ def SubgroupPolynomial(E,Q,l): #Suppose que E est sous forme de Weierstrass, et 
 
 # In[4]:
 
+#Obsolète tant que l'on ne réécrit pas les formules pour les applications
 def StepWithTorsion(E,L,T,Card,i):
     """Cette fonction prend en argument :
     -E, une courbe elliptique
@@ -601,8 +519,59 @@ def StepWithTorsion(E,L,T,Card,i):
     return Eprime,Tprime
 
 
-# In[17]:
+# In[1]:
 
+#Obsolète tant qu'on ne réécrit pas les formules pour les applications
+def StepWithTorsion_x(E,L,T,Card,i):
+    """Cette fonction prend en argument :
+    -E, une courbe elliptique
+    -L, la liste des nombres premiers utilisés
+    -T, une liste de points de torsion
+    -Card, le cardinal de la courbe
+    -i, l'indice utilisé
+    et renvoie Eprime, Tprime : courbe image et liste de points de torsion"""
+    Q=T[i]
+    pol=SubgroupPolynomial(E,Q,L[i])
+    phi=EllipticCurveIsogeny(E,kernel=pol,degree=L[i])
+    Eprime=phi.codomain()
+    f=phi.x_rational_map()
+    Tprime=[]
+    for k in range(len(L)):
+        if k<>i:
+            Q_k=T[k]
+            x_k,y_k,z_k=Q_k[0],Q_k[1],Q_k[2]
+            assert z_k==1
+            Q_kprime=Eprime.lift_x(f(x_k))
+            Tprime.append(Q_kprime)
+        else:
+            Qprime=FindRationalTorsion(Eprime,L[i],Card)
+            Tprime.append(Qprime)
+    return Eprime,Tprime
+
+
+# In[ ]:
+
+#Formules de Vélu
+def ImageCurve(E,P):
+    """Cette fonction prend en argument :
+    -E, courbe elliptique
+    -P, polynôme définissant le noyau d'une isogénie cyclique de degré l impair, séparable et normalisée
+    et renvoie la courbe image avec les formules de Velu"""
+    a_1, a_2, a_3 , a_4, a_6 = E.a_invariants()
+    b_2, b_4, b_6, b_8 = E.b_invariants()
+    n = P.degree()
+    s_1 = -P[n - 1]
+    s_2 = P[n - 2]
+    s_3 = -P[n - 3]
+    t = 6*(s_1**2 - 2*s_2) + b_2*s_1 + n*b_4
+    w = 10*(s_1**3 - 3*s_1*s_2 + 3*s_3) + 2*b_2*(s_1**2 - 2*s_2) + 3*b_4*s_1 + n*b_6
+    E1 = EllipticCurve([a_1, a_2, a_3, a_4 - 5*t, a_6 - b_2*t - 7*w])
+    return E1
+
+
+# In[ ]:
+
+#Le plus rapide jusqu'à présent
 def StepWithoutRationalMaps(E,L,Card,i):
     """Cette fonction prend en argument :
     -E, une courbe elliptique
@@ -612,11 +581,6 @@ def StepWithoutRationalMaps(E,L,Card,i):
     et renvoie la courbe image."""
     Q=FindRationalTorsion(E,L[i],Card)
     pol=SubgroupPolynomial(E,Q,L[i])
-    phi=EllipticCurveIsogeny(E,kernel=pol,degree=L[i])
-    return phi.codomain()
-
-
-# In[ ]:
-
-
+    E1=ImageCurve(E,pol)
+    return E1
 
