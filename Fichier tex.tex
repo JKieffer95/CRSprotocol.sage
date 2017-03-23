@@ -9,8 +9,10 @@
 \usepackage{textcomp}
 \usepackage{lmodern}
 \usepackage[french]{babel}
+\usepackage{fullpage}
 
 \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\Q}{\mathbb{Q}}
 \renewcommand{\H}{\mathbb{H}}
@@ -21,6 +23,7 @@
 \newcommand{\End}{\mathrm{End}}
 \newcommand{\Ell}{\mathcal{E}\ell\ell}
 \renewcommand{\frak}{\mathfrak}
+\newcommand{\de}{\,:\,}
 
 \newtheorem{thm}{Théorème}[subsection]
 \newtheorem{lem}[thm]{Lemme}
@@ -57,14 +60,14 @@ Soit $k$ un corps et $E,\ E_1,\ E_2/k$ des courbes elliptiques.
 
 \item L'application
 $$\begin{aligned}
-\Z &\vers &End_k(E) \\
-n &\mapsto &[n]_E
+&\Z &\longrightarrow&\ &\End(E) &\\
+&n &\longmapsto& &[n]_E \ \ &
 \end{aligned}$$
 est injective.
 
-\item Pour toute isogénie $\phi\ :\ E_1\vers E_2$ de degré $m$, il existe une unique isogénie notée $\hat{\phi}\ :\ E_2\vers E_1$ de degré $m$ telle que $\phi\hat{\phi}=[m]_{E_2}$ et $\hat{\phi}\phi=[m]_{E_1}$.
+\item Pour toute isogénie $\phi\de E_1\vers E_2$ de degré $m$, il existe une unique isogénie notée $\widehat{\phi}\de E_2\vers E_1$ de degré $m$ telle que $\phi\widehat{\phi}=[m]_{E_2}$ et $\widehat{\phi}\phi=[m]_{E_1}$.
 De plus, on a les relations suivantes lorsqu'elles ont un sens :
-$$\hat{\phi+\psi}=\hat{phi}+\hat{psi},\quad \hat{\phi\psi}=\hat{\psi}\hat{\phi}.$$
+$$\widehat{\phi+\psi}=\widehat{\phi}+\widehat{\psi},\quad \widehat{\phi\psi}=\widehat{\psi}\widehat{\phi}.$$
 En particulier, deg : $\End(E)\vers \End(E)$ est une forme quadratique et $[m]_E$ est de degré $m^2$.
 
 \item On a l'alternative suivante : $\End(E)$ est soit $\Z$, soit un ordre dans un corps quadratique imaginaire, soit un ordre dans une algèbre de quaternions sur $\Q$. De plus, le dernier cas ne survient qu'en caractéristique positive. Si $k$ est un corps fini, alors on est dans le second cas lorsque $E$ est ordinaire, et dans le troisième cas si $E$ est supersingulière.
@@ -73,7 +76,7 @@ En particulier, deg : $\End(E)\vers \End(E)$ est une forme quadratique et $[m]_E
 \end{prop}
 
 \begin{rem}
-L'identification $End(E)\simeq \O$ peut être rendue canonique de la façon suivante :
+L'identification $\End(E)\simeq \O$ peut être rendue canonique de la façon suivante : sur $\C$, on regarde le pullback de la différentielle invariante. Sur un corps fini ?
 \end{rem}
 
 Dans la suite de ce document, on s'intéresse à des courbes elliptiques ordinaires sur un corps fini : on étudie donc plus en détail le cas de la multiplication complexe par un ordre dans un corps quadratique imaginaire.
@@ -83,7 +86,7 @@ Dans la suite de ce document, on s'intéresse à des courbes elliptiques ordinai
 On suit ici Cox.
 
 \begin{defi}
-Soit $K$ un corps de nombres. Un \emph{ordre} de $K$ est un sous-anneau $\O$ de $K$ qui est un $\Z$-module de type fini et engendre $K$ comme $\Q$-espace vectoriel. En particulier, $\O\subset \O_K$,$\O$ est un $\Z$-module libre de rang $[K:\Q]$, et $\O$ est d'indice fini dans $\O_K$.
+Soit $K$ un corps de nombres. Un \emph{ordre} de $K$ est un sous-anneau $\O$ de $K$ qui est un $\Z$-module de type fini et engendre $K$ comme $\Q$-espace vectoriel. En particulier, $\O\subset \O_K$, $\O$ est un $\Z$-module libre de rang $[K:\Q]$, et $\O$ est d'indice fini dans $\O_K$.
 
 On dit que $\O_K$ est \emph{l'ordre maximal} de $K$.
 \end{defi}
@@ -99,7 +102,7 @@ Soit $\O$ un ordre d'un corps quadratique $K$ On appelle $f=[\O_K:\O]$ le \emph{
 \end{defi}
 
 \begin{defi}
-Idéaux d'un ordre quadratique. Norme. Idéaux propres. Idéaux fractionnaires. Dans le cas d'un corps quadratique, les idéaux fractionnaires propres sont les idéaux fractionnaires inversibles. Les idéaux fractionnaires principaux sont inversibles. Groupe de classe de $\O$.
+Idéaux d'un ordre quadratique. Norme. Idéaux propres. Idéaux fractionnaires. Dans le cas d'un corps quadratique, les idéaux fractionnaires propres sont les idéaux fractionnaires inversibles. Les idéaux fractionnaires principaux sont inversibles. Groupe de classe de $\O$, noté $\Cl(\O)$.
 \end{defi}
 
 \begin{defi}
@@ -111,26 +114,32 @@ Idéaux premiers au conducteur. Ce sont des idéaux propres. Le groupe de classe
 Cf Sutherland.
 
 \begin{prop}
-Soit $E/k$ une courbe elliptique. Alors pour tout sous-groupe fini $S$ de $E(\bar{k})$, il existe une courbe elliptique sur $k$ notée $E/S$ et une isogénie séparable $\alpha\ :\ E \vers E/S$, uniques à isomorphisme près, tel que $\alpha$ soit de noyau $S$. De plus, on peut calculer une telle isogénie à l'aide des formule de Vélu. Enfin si $S$ est défini sur $k$, on peut choisir $E/S$ et $\alpha$ définis sur $k$.
+Soit $E/k$ une courbe elliptique. Alors pour tout sous-groupe fini $S$ de $E(\bar{k})$, il existe une courbe elliptique sur $\bar{k}$ notée $E/S$ et une isogénie séparable $\alpha\de E \vers E/S$, uniques à isomorphisme près, tel que $\alpha$ soit de noyau $S$. De plus, on peut calculer une telle isogénie à l'aide des formule de Vélu. Enfin si $S$ est défini sur $k$, on peut choisir $E/S$ et $\alpha$ définis sur $k$. De plus, $\alpha$ a pour degré le cardinal de $S$.
 \end{prop}
 
 \begin{rem}
-Peut-être une reformulation plus agréable en termes schématiques : soit $E/k$ une courbe elliptique. Alors pour tout $k$-sous-schéma en groupe $S$ de $E$ fini (et plat) il existe une courbe elliptique $E/S$ et une isogénie $\alpha\ :\ E\vers E/S$, définies sur $k$ et uniques à isomorphisme près, tel que $\alpha$ soit de noyau $S$ en tant que schéma en groupe.
+C'est sans doute vrai en regardant des isogénies pas forcément séparables, mais il ne faut plus alors parler des $\bar{k}$-points : il faut se donner un sous-schéma en groupe fini (et plat) de $E$. De plus le degré de l'isogénie est alors le rang du noyau.
 \end{rem}
 
-On suppose maintenant que $E/k$ est une courbe elliptique telle que $End(E)\simeq \O$ est un ordre dans un corps quadratique imaginaire $K$.
+On suppose maintenant que $E/k$ est une courbe elliptique telle que $\End(E)\simeq \O$ est un ordre dans un corps quadratique imaginaire $K$.
 
 \begin{defi}
-Soit $\frak a$ un $\O$-idéal inversible. On note $E[\frak a]$ le sous-schéma en groupe de $E$ défini par les équations $\alpha(P)=0$ pour $\alpha\in\frak a$, et l'on note $\phi_{\frak a}$ l'isogénie de noyau $E[\frak a]$ donnée par la proposition précédente. Si $N(\frak a)$ n'est pas divisible par car($k$) (?), on a deg $\phi_{\frak a}=N(\frak a)$. On note $\frak{a}\cdot E$ la courbe elliptique image de cette isogénie.
+Soit $\frak a$ un $\O$-idéal inversible. On note $E[\frak a]$ le sous-schéma en groupe de $E$ défini par les équations $\alpha(P)=0$ pour $\alpha\in\frak a$, et l'on note $\phi_{\frak a}$ l'isogénie de noyau $E[\frak a]$ donnée par la proposition précédente. On a deg $\phi_{\frak a}=N(\frak a)$. On note $\frak{a}\cdot E$ la courbe elliptique image de cette isogénie.
 \end{defi}
 
 \begin{prop}
 La courbe $\frak{a}\cdot E$ obtenue a également multiplication complexe par $\O$. De plus, cela définit une action du groupe des idéaux fractionnaires de $\O$ sur $Ell_{\bar{k}}(\O)$ qui est triviale sur les idéaux fractionnaires principaux, donc une action de $\Cl(\O)$ sur $Ell_{\bar{k}}(\O)$. Cette action est simplement transitive.
 \end{prop}
 
+\begin{proof}
+Dans le cas complexe, cf. Silverman. Pour les corps finis, on utilise le théorème de relèvement de Deuring.
+
+Transitivité : soient $\bar{E_1},\ \bar{E_2}$ deux courbes elliptiques à CM par $\O$ sur un corps fini $k$. Alors on se donne deux relèvements à $\C$ qui ont 
+\end{proof}
+
 
 \begin{rem}
-On peut regarder uniquement les courbes définies sur $k$ car tous les $E[\frak a](\bar{k})$ sont définis sur $k$ (les idéaux sont stables par multiplication par le Frobenius).
+Si l'une de ces courbes est définie sur $k$, on peut regarder uniquement les courbes définies sur $k$ car tous les $E[\frak a]$ sont définis sur $k$ (les idéaux sont stables par multiplication par le Frobenius). Ainsi les courbes à multiplication complexe par $\O$ sont soit toutes définies sur $k$, soit aucune ne l'est.
 \end{rem}
 
 \subsection{Le graphe d'isogénies}
@@ -155,9 +164,9 @@ Isogénies horizontales et verticales (ascendantes, descendantes). Remarque : de
 \begin{prop}
 Les isogénies horizontales correspondent à l'action du groupe de classe de $\O$: une courbe elliptique de départ $E$ étant donnée, on a la bijection
 $$\begin{aligned}
-\text{Isogénies horizontales} &\leftrightarrow &\text{Classes d'idéaux de}\ \O \\
-\alpha &\mapsto &\{\text{Endomorphismes s'annulant sur Ker}\alpha \} \\
-\phi_{\frak a} &\leftarrow &\frak a
+& \left\{\text{\emph{Isogénies horizontales}}\right\} & \longleftrightarrow &\quad \{\text{\emph{Classes d'idéaux de}}\ \O \} &\\
+& \quad\qquad\qquad \alpha & \longmapsto &\ \ \{\phi\in\O\ :\ \mathrm{Ker}\,\alpha \subset\mathrm{Ker}\,\phi\} &\\
+& \quad\qquad\qquad \phi_{\frak a} & \longleftarrow & \quad\qquad\qquad \frak a &
 \end{aligned}$$
 \end{prop}
 
@@ -168,52 +177,217 @@ Vu en termes de l'action de $\Cl(\O)$ sur l'ensemble $Ell_k(\O)$, on s'intéress
 \item[•] Si $l$ est scindé dans $K$, alors il existe exactement deux tels idéaux.
 \end{itemize}
 
-Selon les cas, on a donc une bonne description des isogénies horizontales. Dans le premier cas, on obtient des boucles ou des cycles à deux sommets; dans le second cas, on obtient des sommets isolés; dans le troisième cas, soit les deux idéaux sont égaux dans $\Cl(\O)$ et c'est similaire au premier cas, soit ils sont distincts et on obtient des cycles de longueur au moins 3.
+Selon les cas, on a donc une bonne description des isogénies horizontales. Dans le premier cas, on obtient des boucles ou des cycles à deux sommets; dans le second cas, on obtient des sommets isolés; dans le troisième cas, soit les deux idéaux sont égaux dans $\Cl(\O)$ et c'est similaire au premier cas (avec des arêtes doubles), soit ils sont distincts et on obtient des cycles de longueur au moins 3.
 
 
+\subsection{Théorèmes de relèvement}
 
+
+\begin{thm}[Deuring]
+Soit $k$ un corps fini de caractéristique $p$, $E_0/k$ une courbe elliptique et $\alpha_0$ un endomorphisme de $E_0$. Alors il existe un corps de nombres $K$, une courbe elliptique $E/K$, un endomorphisme $\alpha$ de $E$ et un premier $\frak P$ de $K$ de corps résiduel $k$, tels que $E$ a bonne réduction a $\frak P$, $E_0$ est isomorphe à $\bar{E}$ et $\alpha_0$ correspond à $\bar{\alpha}$ sous cet isomorphisme.
+\end{thm}
+
+
+\begin{thm}[Lang]
+Soit $L$ un corps de nombres, $E/L$ une courbe elliptique telle que $\End(E)\simeq \O$ est un ordre dans un corps imaginaire quadratique $K$. Soit $p$ un nombre premier et $\frak P$ un premier de $L$ au-dessus de $p$, où $E$ a bonne réduction. Alors $\bar{E}$ est ordinaire si et seulement si $p$ est totalement scindé dans $K$. Dans ce cas, si $c=p^r c_0$ est le conducteur de $\O$, on a :
+\begin{itemize}
+\item[(i)] $\End(\bar{E})=\Z+c_0 \O_K$ est l'ordre de $K$ de conducteur $c_0$.
+\item[(ii)] Si $c=c_0$, alors la réduction donne un isomorphisme $\End(E)\vers\End(\bar{E})$.
+\end{itemize}
+
+\end{thm}
+
+\newpage
 
 \section{Cryptosystème et algorithmes}
 
-Cf Rostovtsev/Stolbunov.
 
-Le cryptosystème décrit dans cet article consiste à se déplacer dans un graphe $G$ obtenu comme la superposition de plusieurs graphes de l-isogénies $G_l(k)$, où $l$ est un nombre premier qui est scindé dans $K$. On choisit une courbe elliptique de départ définie sur $k$, ce qui donne un corps $K$ et un ordre $\O$ tel que $Ell_k(\O)$ est non vide et est un espace principal homogène pour le groupe de classe $\Cl(\O)$. Ainsi se déplacer dans le graphe revient à calculer dans le groupe de classes de $\O$. Le cryptosystème proposé est alors simplement un échange de clé de Diffie-Hellman dans ce groupe abélien, en exprimant les éléments de ce groupe comme des produits d'idéaux premiers dont la norme est un petit nombre premier scindé dans $K$.
 
-D'un point de vue algorithmique, un sommet du graphe est représenté par un $j$-invariant dans $\F_p$ ainsi que deux nombres $A,B\in\F_p$ donnant une équation de Weierstrass réduite pour la courbe. Il faut alors répondre aux questions suivantes.
+\subsection{Diffie-Hellman et actions de groupes}
 
-* Etant donnés $j,A,B,l$, comment calculer les j-invariants voisins dans le graphe de $l$-isogénies ? Comment calculer une équation de Weierstrass de la courbe image ?
-* Etant donné un nombre premier $l$ qui se scinde en deux idéaux $\frak l,\bar{\frak l}$, comment distinguer l'action de $\frak l$ et l'action de $\bar{\frak l}$ sur la courbe de départ ?
 
-On répond à la première question grâce aux polynômes de division ou aux polynômes modulaires, et à la seconde en regardant l'action du Frobenius sur les points du noyau de l'isogénie.
+La sécurité de nombreux cryptosystèmes à clefs publiques est basée sur la difficulté supposée d'un problème mathématique. On considère qu'un tel problème est \emph{difficile} s'il n'existe pas d'algorithme fonctionnant en temps polynomial qui, recevant en entrée les données du problème, en donne la solution avec probabilité supérieure à $\frac{1}{2}+\varepsilon(n)$ (pour un problème décisionnel) ou $\varepsilon(n)$ (pour un problème computationnel), où $\varepsilon$ est une fonction négligeable devant les polynômes et $n$ est le \emph{paramètre de sécurité} du système, typiquement la taille des données (par exemple $\log(N)$ pour un groupe de cardinal $N$).
 
-\subsection{Calcul des voisins à l'aide des polynômes de division}
+L'un des problèmes les plus connus a été proposé par Diffie et Hellman :
 
-Cela part du constat suivant : si $\phi\ : E\vers E'$ est une isogénie séparable de degré $l$, alors son noyau est un sous-groupe de $E(\bar{k})$ de cardinal $l$. Il est de plus stable par $[-1]$, donc en écrivant une équation de Weierstrass réduite pour $E$, il existe un polynôme $K_\phi$ de degré $\frac{l-1}{2}$ dont les racines sont les coordonnées $x$ des points affines de Ker$\phi$. Si $\phi$ est définie sur $k$, alors $K_\phi$ est à coefficients dans $k$ (c'est évident en regardant l'action de Galois).
+\textbf{Problème 1 (Decisional Diffie-Hellman ou DDH).} \'Etant donné un groupe $G$ cyclique d'ordre $N$ et un générateur $g$ de $G$, et un triplet $(g^x,g^y,g^z)$ où
+\begin{itemize}
+\item Avec probabilité $\frac{1}{2}$, $x,y$ sont tirés au hasard dans $\Z/N$ et $z=xy$
+\item Avec probabilité $\frac{1}{2}$, $x,y,z$ sont tirés au hasard dans $\Z/N$,
+décider de quelle distribution le triplet provient.
+\end{itemize}
 
-Or les points de Ker$\phi$ sont de $l$-torsion, donc des points de $E[l](\bar{k})$ : par conséquent le polynôme $K_\phi$ doit diviser le $l$-ième polynôme de division $\psi_l$ de la courbe $E$, qui peut s'exprimer (difficilement) en terme des coefficients de l'équation de $E$ et est de degré $l^2$.
+\textbf{Problème 2 (Computational Diffie-Hellman ou CDH).} \'Etant donnés $G$ cyclique d'ordre $N$, $g$ un générateur, $g^a,g^b\in G$, calculer $g^{ab}$.
 
-Une fois déterminés un facteur de degré $l$ de $\psi_l$ dans $k[X]$, on peut calculer l'isogénie correspondante et le $j$-invariant (et une équation) de la courbe image à l'aide de formules explicites.
+Ces problèmes, que l'on croit difficiles (une \emph{preuve} de cette difficulté montrerait en particulier le fameux P $\neq$ NP), sont à la base de la sécurité de l'échange de clé de Diffie-Hellman, où Alice et Bob choisissent chacun respectivement $a$ et $b$, s'échangent $g^a$ et $g^b$ et connaissent ensuite chacun la clé commune $g^{ab}=(g^a)^b=(g^b)^a$.
 
-\subsection{Calcul des voisins à l'aide d'une équation modulaire}
+Ce schéma peut ensuite être appliqué pour toutes sortes de groupes, par exemple le groupe multiplicatif ou une courbe elliptique sur un corps fini. On peut également citer le problème du logarithme discret (DLP), qui consiste, étant donnés $G$, un générateur $g$ et un élément $h$, à calculer un entier $a$ tel que $g^a=h$. La difficulté des problèmes à la Diffie-Hellman repose à son tour sur la difficulté du DLP.
 
-Définitions et propriétés de la courbe modulaire pour $\Gamma_0(l)$, dans le cas complexe.
-Les propriétés restent valables en passant à des corps finis ? Cela repose sur des théorèmes de relèvement.
+\vspace{5mm}
+
+D'autres problèmes susceptibles de donner lieu à des protocoles de cryptage sont construits à partir d'une action de groupe :
+
+\textbf{Problème 3 (Version computationnelle)} \'Etant donné un groupe abélien $G$ agissant sur un ensemble $X$ de façon simplement transitive, et des éléments $x_0, a\cdot x_0, b\cdot x_0\in X$, calculer $ab\cdot x_0$.
+
+On peut aussi donner une version décisionnelle de ce problème. Comme dans le cas de Diffie-Hellman, on a un échange de clé naturel fondé sur ce problème : $G, X$ et $x_0$ étant des données publiques, Alice et Bob choisissent chacun $a,b\in G$ et s'échangent $a\cdot x_0$, $b\cdot x_0$, et peuvent alors chacun calculer $a\cdot b\cdot x_0=b\cdot a\cdot x_0$, puisque le groupe $G$ est abélien. De fait, l'échange de Diffie-Hellman est une version de ce schéma plus général pour $\Z/N\Z$ agissant sur $\langle g\rangle$ par puissances.
+
+La difficulté de ce problème repose notamment sur la difficulté d'\og inverser\fg\ l'action de $G$ sur $X$.
+
+\vspace{5mm}
+
+Le cryptosystème décrit dans l'article de Rostovtsel et Stolbunov consiste à utiliser l'action du groupe de classe d'un ordre quadratique $\O$ sur l'ensemble $\Ell_k(\O)$ lorsqu'il est non vide, où $k$ est un corps fini. En représentant les éléments de $\Cl(\O)$ comme des produits d'idéaux dont la norme est un petit nombre premier (ce qui est possible en supposant GRH ?), cela revient concrètement à se déplacer dans un graphe $G$ obtenu comme la superposition de plusieurs graphes de $\ell$-isogénies $G_\ell(k)$, où $\ell$ est un nombre premier qui est scindé dans $K=\O\otimes\Q$.
+
+Pouvoir calculer efficacement l'action de $\Cl(\O)$ sur $X=\Ell_k(\O)$, dont les éléments sont représentés par un $j$-invariant et une équation dans $k$, revient alors à répondre à deux questions :
+\begin{itemize}
+\item \'Etant donnés $j,A,B,\ell$, comment calculer les $j$-invariants voisins dans le graphe de $\ell$-isogénies ? Comment calculer une équation de Weierstrass de la courbe image ?
+\item \'Etant donné un nombre premier $\ell$ qui se scinde en deux idéaux $\frak l,\bar{\frak l}$, comment distinguer l'action de $\frak l$ et l'action de $\bar{\frak l}$ ?
+\end{itemize}
+
+On peut répondre à la première question grâce aux polynômes de division ou aux polynômes modulaires, et à la seconde en regardant l'action du Frobenius sur les points du noyau de l'isogénie.
+
+\subsection{Calcul à l'aide d'un polynôme de division}
+
+Partons du constat suivant : si $\phi\de E\vers E'$ est une isogénie séparable de degré $\ell$, alors son noyau est un sous-groupe de $E(\bar{k})$ de cardinal $\ell$. Il est de plus stable par $[-1]$, donc en écrivant une équation de Weierstrass réduite pour $E$, il existe un polynôme $K_\phi$ de degré $\frac{\ell-1}{2}$ dont les racines sont les coordonnées $x$ des points affines de Ker\,$\phi$. Si $\phi$ est définie sur $k$, alors $K_\phi$ est à coefficients dans $k$ (c'est évident en regardant l'action de Galois).
+
+Or les points de Ker\,$\phi$ sont de $\ell$-torsion, donc des points de $E[\ell](\bar{k})$ : par conséquent le polynôme $K_\phi$ doit diviser le $\ell$-ième polynôme de division $\psi_\ell$ de la courbe $E$, qui peut s'exprimer (difficilement) en terme des coefficients de l'équation de $E$ et est de degré $\frac{\ell^2-1}{2}$.
+
+Une fois déterminés un facteur de degré $\ell$ de $\psi_\ell$ dans $k[X]$, on peut calculer l'isogénie correspondante et le $j$-invariant (et une équation) de la courbe image à l'aide de formules explicites.
+
+D'un point de vue algorithmique, cette méthode demande de factoriser entièrement un polynôme de degré $\frac{\ell^2-1}{2}$, ce qui se révèle trop coûteux. De plus, il n'est pas garanti de trouver des facteurs de degré exactement $l$ ; il faut dans certains cas recombiner des facteurs de degré plus petit, ce qui ajoute une difficulté supplémentaire.
+
+\subsection{Calcul à l'aide d'une équation modulaire}
+
+Au lieu de rechercher directement le polynôme définissant le noyau de l'isogénie, on peut utiliser les propriétés de la \emph{courbe modulaire} $\Gamma_0(\ell)$, qui paramétrise les couples de $j$-invariants de courbes ellipiques reliées par des isogénies (cycliques) de degré $\ell$. Plus précisément, on a le théorème suivant.
+
+\begin{defi}
+Soit $m\geq 1$ un entier. On définit
+$$C(m)=\left\{ 
+\left(
+\begin{matrix}
+a & b \\
+0 & d 
+\end{matrix}
+\right)
+\in \M_2(\Z)\ :\ ad=m,\ a>0,\ 0\leq b<d,\ \mathrm{pgcd}(a,b,d)=1\right\}.$$
+\end{defi}
+
+\begin{lem}
+Les $(\sigma^{-1}\Gamma(1)\sigma)\cap \Gamma(1)$ pour $\sigma\in C(m)$ sont exactement les classes à droite de $\Gamma_0(m)$ dans $\Gamma(1)$.
+\end{lem}
+
+\begin{thm}[Polynômes modulaires classiques]
+
+Soit $m\geq 1$ un entier. Il existe un unique  polynôme $\Phi_m \in \Z[X,Y]$, appelé \emph{polynôme modulaire} de degré $m$, tel que
+$$\forall \tau\in\H,\ \Phi_m(X,j(\tau))=\prod_{\sigma\in C(m)} (X-j(\sigma\tau)).$$
+De plus, on a les propriétés suivantes :
+
+\begin{itemize}
+\item[(i)] $\Phi_m(X,Y)=\Phi_m(Y,X)$,
+\item[(ii)] $\Phi_m(X,Y)$ est irréductible en $X$,
+\item[(iii)] Si $m$ n'est pas un carré, alors $\Phi_m(X,X)$ est non constant et de coefficient dominant $\pm 1$,
+\item[(iv)] Si $m=p$ est un nombre premier, on a la \emph{relation de congruence de Kronecker} :
+$$\Phi_p(X,Y) = (X^p-Y)(X-Y^p) \: \mathrm{mod}\ p,$$
+\item[(v)] Pour tout corps $k$, pour toutes courbes elliptiques $E_1,E_2$ sur $k$ de $j$-invariants $j_1$ et $j_2$, on a $\Phi_m(j_1,j_2)=0$ si et seulement si il existe une isogénie $E_1 \vers E_2$ (ou une tordue) définie sur $k$ et cyclique de degré $m$.
+\end{itemize}
+
+\end{thm}
+
+On peut voir $\Phi_m$ comme \emph{l'équation canonique} de la courbe modulaire $\Gamma_0(m)$. Ses propriétés sont démontrées dans ... Pour étendre $(v)$ au cas d'un corps fini, on peut utiliser un théorème de relèvement à la Deuring ?
+
+\vspace{5mm}
+
+La stratégie de calcul est alors la suivante : étant donné un invariant $j$ dans $\Ell_k(\O)$, on sait par les résultats précédents et $(v)$ que $\Phi_\ell(j,Y)$ admet exactement deux racines dans $k$. Pour chacune des deux racines, on peut ensuite calculer l'isogénie correspondante à l'aide de formules explicites. Cette stratégie nécessite de calculer deux racines d'un polynôme de degré $\ell$, ce qui est a priori moins coûteux que de factoriser le polynôme de division.
+
+Les polynômes modulaires ont cependant le désavantage d'avoir d'énormes coefficients dans $\Z$. Pour contourner cela, on peut utiliser les polynômes modulaires d'Atkin, qui relient la fonction modulaire $j$ à une fonction modulaire $f$ pour $\Gamma_0(\ell)^*$ :
+
+... définition...
+
+Cette stratégie fait donc intervenir trois calculs de racines. Les polynômes d'Atkin sont toutefois sensiblement plus légers que les $\Phi_\ell$, ce qui permet un calcul plus rapide, mais cette méthode a le désavantage de pouvoir échouer : en effet, il n'y a pas de raison a priori pour que $A_\ell(F,j)$ ait exactement deux racines, etc.
+
+Un exemple précis où ça échoue ?
+
 
 \subsection{Détermination de la direction}
 
-La question est ici de distinguer parmi les deux sous-groupes de cardinal $l$ de $E[l]$ définis sur $k$. Comme $l$ est scindé dans $K$, le polynôme caractéristique du Frobenius $\pi$ est scindé dans $\F_l$ à racines simples, et ce polynôme peut être vu comme le polynôme caractéristique de $\pi$ comme endomorphisme du $\F_l$-espace vectoriel $E[l](\bar{k})$ de dimension 2. Ainsi dans une base adaptée de $E[l](\bar{k})$, $\pi$ agit comme une matrice scalaire $(\lambda,\mu)$ avec $\lambda\neq\mu$.
 
-Les deux sous-groupes de cardinal $l$ définis sur $k$, c'est à dire stables par le Frobenius $\pi$, sont alors les deux espaces propres de cet endomorphisme : la valeur propre correspondante permet donc de distinguer parmi les deux sous-groupes.
+
+Les méthodes exposées jusqu'ici ne permettent pas de distinguer parmi les deux voisins d'une courbe dans le graphe de $\ell$-isogénies. La question est donc de distinguer parmi les deux sous-groupes de cardinal $\ell$ de $E[\ell]$ définis sur $k$. Comme $\ell$ est scindé dans $K$, le polynôme caractéristique du Frobenius $\pi$ est scindé dans $\F_\ell$ à racines simples, et ce polynôme peut être vu comme le polynôme caractéristique de $\pi$ comme endomorphisme du $\F_\ell$-espace vectoriel $E[\ell](\bar{k})$ de dimension 2. Ainsi dans une base adaptée de $E[\ell](\bar{k})$, $\pi$ agit comme une matrice scalaire $(\lambda,\mu)$ avec $\lambda\neq\mu$.
+
+Les deux sous-groupes de cardinal $\ell$ définis sur $k$, c'est à dire stables par le Frobenius $\pi$, sont alors les deux espaces propres de cet endomorphisme : la valeur propre correspondante permet donc de distinguer parmi les deux sous-groupes.
 
 Concrètement, pour vérifier qu'un sous-groupe donné par un polynôme $P$ correspond à la valeur propre $\lambda$, on relève $\lambda$ dans $\Z$ et on vérifie l'égalité
+
 $$ (X^p,Y^p)=\lambda\cdot (X,Y)\quad \mod (Y^2-X^3-aX-b, P)$$
+
 où le point central représente les formules de multiplication scalaire des points de la courbe $E$.
 
 Comment relier alors $\lambda,\mu$ à l'action de $\frak l$ ou $\bar{\frak l}$ ?
-Comme $E[l](\bar{k})$ est un $\O/l\O$-module de rang 1, et comme $\frak l,\ \bar{\frak l}$ sont des idéaux premiers distincts, on a la décomposition
-$$\O/l\O \simeq \O/\frak l \times \O/\bar{\frak l}.$$
+Comme $E[\ell](\bar{k})$ est un $\O/\ell\O$-module libre de rang 1, et comme $\frak l,\ \bar{\frak l}$ sont des idéaux maximaux distincts, on a la décomposition
+
+$$\O/\ell\O \simeq \O/\frak l \times \O/\bar{\frak l}.$$
+
 Ainsi l'égalité $(\pi-\lambda)(\pi-\mu)=0$ a lieu dans $\O/\frak l \times \O/\bar{\frak l}$, qui est un produit de deux corps. Quitte à renommer, on a donc $\pi=\lambda$ dans $\O/\frak l$ et $\pi=\mu$ dans $\O/\bar{\frak l}$.
-Alors si $P$ est un point de $E[l](\bar{k})$, $P$ est tué par $\frak l$ implique que $P$ est vecteur propre pour $\pi$ associé à $\lambda$.
+
+Alors si $P$ est un point de $E[\ell](\bar{k})$, $P$ est tué par $\frak l$ si et seulement si $P$ est vecteur propre pour $\pi$ associé à $\lambda$.
+
+
+
+\subsection{Calcul à l'aide de torsion rationnelle}
+
+L'idée est la suivante : si $\ell$ est un nombre premier d'Elkies, alors une courbe elliptique $E/\F_p$ admet un point de $\ell$-torsion rationnel non trivial si et seulement si 1 est valeur propre du Frobenius modulo $\ell$ : cela est équivalent à demander que la trace $t$ du Frobenius vérifie
+$$t = q+1 \ \mod\ \ell.$$
+
+Si un point rationnel $Q$ de $\ell$-torsion non trivial de $E$ est donné, alors les formules de Vélu permettent de calculer efficacement l'isogénie séparable au départ de $E$ dont le noyau est le sous-groupe engendré par $Q$. Si $\phi\de E\vers E'$ désigne cette isogénie et si $Q'$ est un point rationnel de $E$ de $\ell'$-torsion non trivial, alors $\phi(Q')$ est un point rationnel de $\ell'$-torsion non trivial de $E'$.
+
+On dispose ainsi efficacement de la courbe $E'$ voisine de $E$ dans le graphe de $\ell$-isogénies pour la direction associée à 1 mod $\ell$, si l'on connaît un point de $E$ rationnel non nul de $\ell$-torsion. De plus, si l'on connaissait des points rationnels de $E$ de $\ell'$-torsion pour d'autres nombres premiers $\ell'\neq \ell$, on en connaît pour $E'$.
+
+Pour conclure l'algorithme, il reste à trouver un point rationnel de $\ell$-torsion pour $E'$. Celui-ci ne peut pas être obtenu à partir de $Q$, qui est annulé par $\phi$; en revanche (en ayant calculé dès le départ la valeur $C=\#E(\F_p)$) on peut choisir un point au hasard $P'\in E'(\F_p)$ et calculer $Q'=\frac{C}{\ell}\cdot P$ : alors $Q'$ est un point de $\ell$-torsion non nul de $E'$ avec probabilité environ $1-\frac{1}{\ell}$.
+
+En réalité, il est plus rapide de ne pas calculer du tout les équations pour $\phi$, uniquement les équations de la courbe image, et récupérer des points de torsion rationnels ad hoc à chaque fois.
+
+Ce mode de calcul ne fait pas intervenir de factorisation de polynôme dans $\F_p$ ni de recherche de racines, et ne fait pas intervenir les polynômes modulaires. Il est donc beaucoup plus efficace que les méthodes précédentes pour calculer dans le graphe. En revanche il ne permet de choisir qu'une seule direction, et (surtout) il nécessite de trouver une courbe adéquate.
+
+\subsection{Recherche de la courbe}
+
+Prenons cette définition :
+
+\begin{defi}
+Soit $E/\F_p$ une courbe elliptique de discriminant $D$ et de trace $t$, et $\ell$ un nombre premier. On dit que $\ell$ est \emph{bon} pour $E$ si on a les deux relations
+$$ \left(\frac{D}{\ell}\right)=1\ \text{et}\ t=p+1\ \mod\ \ell.$$
+\end{defi}
+
+Le problème ici est donc la recherche d'une courbe $E$ admettant beaucoup de bons nombres premiers relativement petits. Remarquons qu'intuitivement, la "probabilité" qu'un nombre premier $\ell$ soit bon pour une courbe tirée "au hasard" est proche de $\frac{1}{2\ell}$, et qu'il faudra donc tirer beaucoup de courbes avant d'en trouver une avec une cinquantaine de bons nombres premiers.
+
+Pour calculer le nombre de points d'une courbe elliptique sur $\F_p$ (ou de manière équivalente, la trace du Frobenius) on utilise l'algorithme de Schoof-Elkies-Atkin (SEA) qui consiste à examiner l'action du Frobenius sur des points de $\ell$-torsion de la courbe pour en déduire des informations sur la trace $t$ mod $\ell$, et à recombiner tout cela pour obtenir la trace entière via le théorème chinois.
+
+C'est un algorithme qui termine en temps polynomial. Dans sa version la plus simple, il n'est pourtant pas applicable en pratique, et la version pratique utilise un certain nombre d'astuces.
+
+Dans notre cas, il n'est pas nécessaire de terminer l'algorithme pour chaque courbe testée : on peut utiliser une stratégie d'\emph{early abort}, qui consiste à jeter une courbe $E$ dès que l'on a trouvé un nombre premier $\ell$ tel que $t\neq p+1\ mod\ \ell.$
+
+\newpage
+
+\section{L'algorithme SEA}
+
+\subsection{Idées principales}
+
+\subsection{Optimisations}
+
+
+\newpage
+
+\section{Attaques}
+
+
+\subsection{Preuve de sécurité}
+
+
+\begin{thm}
+
+\end{thm}
+
+
+\subsection{Attaques classiques génériques}
+
 
 \subsection{Choix des paramètres}
 
@@ -238,108 +412,12 @@ Le coût de calcul d'un chemin est alors en gros
 $$k\cdot(\#L)\cdot l_{max}^2\cdot (\log p)\sim 2^6*50*100^2*1024$$
 ce qui est beaucoup trop cher.
 
-
-\subsection{Une autre façon de calculer}
-
-L'idée est la suivante : si $l$ est un nombre premier d'Elkies, alors une courbe elliptique $E/\F_p$ admet un point de $l$-torsion rationnel non trivial si et seulement si $1$ est valeur propre du Frobenius modulo $l$ : cela est équivalent à demander que la trace $t$ du Frobenius vérifie
-$$t = q+1 \ \mod\ l.$$
-Supposons que la courbe $E$ de départ vérifie cette propriété pour tous les degrés d'isogénie considérés (on reviendra plus tard sur la question de la recherche d'une telle courbe). Alors il existe un moyen simple de différencier les deux sous-espaces propres du Frobenius : il suffit de choisir celui associé à la valeur propre 1 mod $l$, c'est à dire le sous-espace rationnel.
-
-De plus, si un point rationnel $Q$ de $l$-torsion non trivial est donné, alors les formules de Vélu permettent de calculer efficacement l'isogénie séparable au départ de $E$ dont le noyau est le sous-groupe engendré par $Q$. Si $\phi\ :\ E\vers E'$ désigne cette isogénie et si $Q'$ est un point rationnel de $E$ de $l'$-torsion non trivial, alors $\phi(Q')$ est un point rationnel de $l'$-torsion non trivial.
-
-On dispose ainsi efficacement de la courbe $E'$ voisine de $E$ dans le graphe de $l$-isogénies pour la direction associée à $1$ mod $l$, si l'on connaît un point de $E$ rationnel non nul de $l$-torsion. De plus, si l'on connaissait des points rationnels de $E$ de $l'$-torsion pour d'autres nombres premiers $l'\neq l$, on en connaît pour $E'$.
-
-Pour conclure l'algorithme, il reste à trouver un point rationnel de $l$-torsion pour $E'$. Celui-ci ne peut pas être obtenu à partir de $Q$, qui est annulé par $\phi$; en revanche (en ayant calculé dès le départ la valeur $C=\#E(\F_p)$) on peut choisir un point au hasard $P'\in E'(\F_p)$ et calculer $Q'=\frac{C}{l}\cdot P$ : alors $Q'$ est un point de $l$-torsion non nul de $E'$ avec probabilité environ $1-\frac{1}{l}$.
-
-En réalité, il est plus rapide de ne pas calculer du tout les équations pour $\phi$, uniquement les équations de la courbe image, et récupérer des points de torsion rationnels ad hoc à chaque fois.
-
-Ce mode de calcul ne fait pas intervenir de factorisation de polynôme dans $\F_p$ ni de recherche de racines, et ne fait pas intervenir les polynômes modulaires. Il est donc beaucoup plus efficace que les méthodes précédentes pour calculer dans le graphe. En revanche il ne permet de choisir qu'une seule direction, et il nécessite de trouver une courbe adéquate.
-
-\subsection{Recherche de la courbe}
-
-Prenons cette définition :
-
-\begin{defi}
-Soit $E/\F_p$ une courbe elliptique de discriminant $D$ et de trace $t$, et $l$ un nombre premier. On dit que $l$ est \emph{bon} pour $E$ si on a les deux relations
-$$ \left(\frac{D}{l}\right)=1\ \text{et}\ t=p+1\ \mod\ l.$$
-\end{defi}
-
-Le problème ici est donc la recherche d'une courbe $E$ admettant beaucoup de bons nombres premiers relativement petits. Remarquons qu'intuitivement, la "probabilité" qu'un nombre premier $l$ soit bon pour une courbe tirée "au hasard" est proche de $\frac{1}{2l}$, et qu'il faudra donc tirer beaucoup de courbes avant d'en trouver une avec une cinquantaine de bons nombres premiers.
-
-Pour calculer le nombre de points d'une courbe elliptique sur $\F_p$ (ou de manière équivalente, la trace du Frobenius) on utilise l'algorithme de Schoof-Elkies-Atkin (SEA) qui consiste à examiner l'action du Frobenius sur des points de $l$-torsion de la courbe pour en déduire des informations sur la trace $t$ mod $l$, et à recombiner tout cela pour obtenir la trace entière via le théorème chinois.
-
-C'est un algorithme qui termine en temps polynomial. Dans sa version la plus simple, il n'est pourtant pas applicable en pratique, et la version pratique utilise un certain nombre d'astuces.
-
-Dans notre cas, il n'est pas nécessaire de terminer l'algorithme pour chaque courbe testée : on peut utiliser une stratégie d'early abort, qui consiste à jeter une courbe $E$ dès que l'on a trouvé un nombre premier $l$ tel que $t\neq p+1\ mod\ l.$
+\subsection{L'attaque quantique de Jao et Soukharev}
 
 
-\section{Attaques}
 
 
-\section{Théorèmes utilisés et restant à prouver}
 
-\subsection{Polynômes modulaires}
-
-Cf Cox.
-
-\begin{defi}
-Soit $m\geq 1$ un entier. On définit
-$$C(m)=\left\{ 
-\begin{matrix}
-a & b \\
-0 & d 
-\end{matrix}
-\in \M_2(\Z)\ :\ ad=m,\ a>0,\ 0\leq b<d,\ \mathrm{pgcd}(a,b,d)=1\right\}.$$
-\end{defi}
-
-\begin{lem}
-Les $(\sigma^{-1}\Gamma(1)\sigma)\cap \Gamma(1)$ pour $\sigma\in C(m)$ sont exactement les classes à droite de $Gamma_0(m)$ dans $\Gamma(1)$.
-\end{lem}
-
-\begin{thm}[Polynômes modulaires classiques]
-
-Soit $m\geq 1$ un entier. Il existe un polynôme $\Phi_m \in \Z[X,Y]$ appelé \emph{polynôme modulaire} de degré $m$ tel que
-$$\forall \tau\in\H, \Phi_m(X,j(\tau))=\prod_{\sigma\in C(m)} (X-j(\sigma\tau)).$$
-De plus, on a les propriétés suivantes :
-
-\begin{itemize}
-\item[(i)] $\Phi_m(X,Y)=\Phi_m(Y,X)$
-\item[(ii)] $Phi_m(X,Y)$ est irréductible en $X$
-\item[(iii)] Si $m$ n'est pas un carré, alors $\Phi_m(X,X)$ est non constant et de coefficient dominant $\pm 1$.
-\item[(iv)] Si $m=p$ est un nombre premier, on a la \emph{relation de congruence de Kronecker} :
-$$\Phi_p(X,Y) = (X^p-Y)(X-Y^p) \: \mathrm{mod}\ p.$$
-\item[(v)] Pour tout corps $k$, pour toutes courbes elliptiques $E_1,E_2$ sur $k$ de $j$-invariants $j_1$ et $j_2$, on a $\Phi_m(j_1,j_2)=0$ si et seulement si il existe une isogénie $E_1 \vers E_2$ définie sur $k$ et cyclique de degré $m$.
-\end{itemize}
-
-\end{thm}
-
-\begin{thm}[Polynômes modulaires d'Atkin]
-
-\end{thm}
-
-\subsection{Structure du graphe d'isogénies}
-
-\begin{thm}[Tate]
-Deux courbes elliptiques sur un corps fini $k$ sont isogènes sur $k$ si et seulement si elles ont même nombre de points sur $k$.
-\end{thm}
-
-\subsection{Théorèmes de relèvement}
-
-\begin{thm}[Deuring]
-Soit $k$ un corps fini de caractéristique $p$, $E_0/k$ une courbe elliptique et $\alpha_0$ un endomorphisme de $E_0$. Alors il existe un corps de nombres $K$, une courbe elliptique $E/K$, un endomorphisme $\alpha$ de $E$ et un premier $\frak P$ de $K$ de corps résiduel $k$, tels que $E$ a bonne réduction a $\frak P$, $E_0$ est isomorphe à $\bar{E}$ et $\alpha_0$ correspond à $\bar{\alpha}$ sous cet isomorphisme.
-\end{thm}
-
-\begin{thm}[Lang]
-Soit $L$ un corps de nombres, $E/L$ une courbe elliptique telle que $\End(E)\simeq \O$ est un ordre dans un corps imaginaire quadratique $K$. Soit $p$ un nombre premier et $\frak P$ un premier de $L$ au-dessus de $p$, où $E$ a bonne réduction. Alors $\bar{E}$ est ordinaire si et seulement si $p$ est totalement scindé dans $K$. Dans ce cas, si $c=p^r c_0$ est le conducteur de $\O$, on a :
-\begin{itemize}
-\item[(i)] $\End(\bar{E})=\Z+c_0 \O_K$ est l'ordre de $K$ de conducteur $c_0$.
-\item[(ii)] Si $c=c_0$, alors la réduction donne un isomorphisme $\End(E)\vers\End(\bar{E})$.
-\end{itemize}
-\end{thm}
-
-\begin{thm}[Relèvement canonique]
-?
-\end{thm}
 
 
 \end{document}
