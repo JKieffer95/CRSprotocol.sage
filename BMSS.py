@@ -21,112 +21,116 @@ algorithm_names = bmss_names + stark_names
 
 # In[5]:
 
-def isogeny_kernel(E1, E2, degree, algorithm="BMSS"):
+def isogeny_kernel(E1, E2, degree, A, P, S, algorithm="BMSS"):
     r"""
-+    Compute the kernel polynomial of the normalized rational isogeny between
-+    ``E1`` and ``E2`` of degree ``degree`` .
-+
-+    Assuming a rational normalized isogeny of degree ``degree`` exists between
-+    ``E1`` and
-+    ``E2``, this function returns the squarefree polynomial vanishing on the
-+    abscissae of its kernel. If no such isogeny exists, the outcome depends on
-+    the algorithm:
-+
-+        - If the BMSS algorithm is used, its output is tested for correctness:
-+          if the test succeeds an exception is returned, if it fails a random
-+          polynomial is returned. The test has heuristic failure probability
-+          exponentially small in ``degree``, see :py:func:`isogeny_BMSS`
-+          for details.
-+
-+        - If Stark's algorithm is used, an exception is returned. (This is
-+          most probably not true. Luca De Feo, Jul 29, 2011)
-+
-+    Better checks are implemented by
-+    :py:class:`sage.schemes.elliptic_curves.ell_curve_isogeny.EllipticCurveIsogeny`
-+    and by
-+    :py:meth:`sage.schemes.elliptic_curves.ell_field.EllipticCurve_field.isogeny`,
-+    which are the preferred ways to create isogenies at the sage command line.
-+
-+    :param E1: an elliptic curve in short Weierstrass form.
-+    :param E2: an elliptic curve in short Weierstrass form.
-+    :param degree: the degree of the isogeny from ``E1`` to ``E2``.
-+    :param algorithm: ``BMSS`` (default) or ``Stark``.
-+
-+    :returns: the squarefree polynomial vanishing on the abscissae of the kernel
-+        of the isogeny.
-+    :rtype: Polynomial
-+
-+    :raises ZeroDivisionError: when the characteristic is too small to compute
-+        isogenies of degree ``degree``. See below.
-+    :raises ValueError: when no isogeny is found.
-+    :raises ValueError: when the two curves are not in short Weierstrass form.
-+
-+    .. WARNING::
-+
-+        If the characteristic of the base field is `p>0`, the algorithms of this
-+        module only work when a certain bound on ``degree`` is satisfied:
-+
-+            - for BMSS, ``p > 4 degree - 1``,
-+            - for Stark's, ``p > 4 degree + 6``.
-+
-+        If the bound is not satisfied, a ``ZeroDivisionError`` is raised.
-+
-+    EXAMPLES:
-+
-+    We can compute isogenies over the rationals::
-+
-+        sage: from sage.schemes.elliptic_curves.ell_isogeny_char_zero import isogeny_kernel
-+
-+        sage: E = EllipticCurve(QQ, [0,0,0,1,0])
-+        sage: R.<x> = QQ[]
-+        sage: f = x
-+        sage: phi = EllipticCurveIsogeny(E, f)
-+        sage: E2 = phi.codomain(); E2
-+        Elliptic Curve defined by y^2 = x^3 - 4*x over Rational Field
-+        sage: isogeny_kernel(E, E2, 2)
-+        x
-+
-+    However beware that BMSS may return a wrong answer::
-+
-+        sage: E2 = EllipticCurve([0,0,0,16,0])
-+        sage: isogeny_kernel(E, E2, 2)
-+        x
-+        sage: E.isogeny(None, codomain=E2, degree=2)
-+        Traceback (most recent call last):
-+        ...
-+        ValueError: Codomain parameter must be isomorphic to computed codomain isogeny
-+
-+    While Stark's algorithm is somewhat safer (but see the documentation of
-+    :py:func:`isogeny_BMSS` for another way of avoiding wrong answers)::
-+
-+        sage: isogeny_kernel(E, E2, 2, "Stark")
-+        Traceback (most recent call last):
-+        ...
-+        ValueError: The two curves are not linked by a rational normalized isogeny of degree 2
-+
-+    We can also compute isogenies over finite fields::
-+
-+        sage: E = EllipticCurve(GF(37), [0,0,0,1,8])
-+        sage: R.<x> = GF(37)[]
-+        sage: f = (x + 14) * (x + 30)
-+        sage: phi = EllipticCurveIsogeny(E, f)
-+        sage: E2 = phi.codomain()
-+        sage: isogeny_kernel(E, E2, 5)
-+        x^2 + 7*x + 13
-+        sage: f
-+        x^2 + 7*x + 13
-+
-+    and number fields, too::
-+
-+        sage: R.<x> = QQ[]
-+        sage: K.<i> = NumberField(x^2 + 1)
-+        sage: E = EllipticCurve(K, [0,0,0,1,0])
-+        sage: E2 = EllipticCurve(K, [0,0,0,16,0])
-+        sage: isogeny_kernel(E, E2, 4, algorithm="stark")
-+        x^3 + x
-+
-+    """
+    Compute the kernel polynomial of the normalized rational isogeny between
+    ``E1`` and ``E2`` of degree ``degree`` .
+
+    Assuming a rational normalized isogeny of degree ``degree`` exists between
+    ``E1`` and
+    ``E2``, this function returns the squarefree polynomial vanishing on the
+    abscissae of its kernel. If no such isogeny exists, the outcome depends on
+    the algorithm:
+
+        - If the BMSS algorithm is used, its output is tested for correctness:
+          if the test succeeds an exception is returned, if it fails a random
+          polynomial is returned. The test has heuristic failure probability
+          exponentially small in ``degree``, see :py:func:`isogeny_BMSS`
+          for details.
+
+        - If Stark's algorithm is used, an exception is returned. (This is
+          most probably not true. Luca De Feo, Jul 29, 2011)
+
+    Better checks are implemented by
+    :py:class:`sage.schemes.elliptic_curves.ell_curve_isogeny.EllipticCurveIsogeny`
+    and by
+    :py:meth:`sage.schemes.elliptic_curves.ell_field.EllipticCurve_field.isogeny`,
+    which are the preferred ways to create isogenies at the sage command line.
+
+    :param E1: an elliptic curve in short Weierstrass form.
+    :param E2: an elliptic curve in short Weierstrass form.
+    :param degree: the degree of the isogeny from ``E1`` to ``E2``.
+    :param A: an univariate polynomial ring over the base field.
+    :param P: a power series ring over the base field.
+    :param S: a Laurent series ring over the base field.
+    :param algorithm: ``BMSS`` (default) or ``Stark``.
+
+    :returns: the squarefree polynomial vanishing on the abscissae of the kernel
+        of the isogeny.
+    :rtype: Polynomial
+
+    :raises ZeroDivisionError: when the characteristic is too small to compute
+        isogenies of degree ``degree``. See below.
+    :raises ValueError: when no isogeny is found.
+    :raises ValueError: when the two curves are not in short Weierstrass form.
+
+    .. WARNING::
+
+        If the characteristic of the base field is `p>0`, the algorithms of this
+        module only work when a certain bound on ``degree`` is satisfied:
+
+            - for BMSS, ``p > 4 degree - 1``,
+            - for Stark's, ``p > 4 degree + 6``.
+
+        If the bound is not satisfied, a ``ZeroDivisionError`` is raised.
+
+    EXAMPLES:
+
+    We can compute isogenies over the rationals::
+
+        sage: from sage.schemes.elliptic_curves.ell_isogeny_char_zero import isogeny_kernel
+
+        sage: E = EllipticCurve(QQ, [0,0,0,1,0])
+        sage: R.<x> = QQ[]
+        sage: f = x
+        sage: phi = EllipticCurveIsogeny(E, f)
+        sage: E2 = phi.codomain(); E2
+        Elliptic Curve defined by y^2 = x^3 - 4*x over Rational Field
+        sage: isogeny_kernel(E, E2, 2)
+        x
+
+    However beware that BMSS may return a wrong answer::
+
+        sage: E2 = EllipticCurve([0,0,0,16,0])
+        sage: isogeny_kernel(E, E2, 2)
+        x
+        sage: E.isogeny(None, codomain=E2, degree=2)
+        Traceback (most recent call last):
+        ...
+        ValueError: Codomain parameter must be isomorphic to computed codomain isogeny
+
+    While Stark's algorithm is somewhat safer (but see the documentation of
+    :py:func:`isogeny_BMSS` for another way of avoiding wrong answers)::
+
+        sage: isogeny_kernel(E, E2, 2, "Stark")
+        Traceback (most recent call last):
+        ...
+        ValueError: The two curves are not linked by a rational normalized isogeny of degree 2
+
+    We can also compute isogenies over finite fields::
+
+        sage: E = EllipticCurve(GF(37), [0,0,0,1,8])
+        sage: R.<x> = GF(37)[]
+        sage: f = (x + 14) * (x + 30)
+        sage: phi = EllipticCurveIsogeny(E, f)
+        sage: E2 = phi.codomain()
+        sage: isogeny_kernel(E, E2, 5)
+        x^2 + 7*x + 13
+        sage: f
+        x^2 + 7*x + 13
+
+    and number fields, too::
+
+        sage: R.<x> = QQ[]
+        sage: K.<i> = NumberField(x^2 + 1)
+        sage: E = EllipticCurve(K, [0,0,0,1,0])
+        sage: E2 = EllipticCurve(K, [0,0,0,16,0])
+        sage: isogeny_kernel(E, E2, 4, algorithm="stark")
+        x^3 + x
+
+    """
     p = E1.base_ring().characteristic()
+    X = A.gen()
 
     # BMSS algorithm
     if algorithm in bmss_names or algorithm is None:
@@ -137,15 +141,15 @@ def isogeny_kernel(E1, E2, degree, algorithm="BMSS"):
         # BMSS returns the denominator of the x-component of a normalized
         # isogeny of degree at most degree,
         # or a non-sense polynomial if no such isogeny exists.
-        ker_poly = isogeny_BMSS(E1, E2, degree)
+        ker_poly = isogeny_BMSS(E1, E2, degree, P)
         # Here we check that the isogeny has EXACTLY the required degree.
         if ker_poly.degree() != degree-1:
             raise ValueError("The two curves are not linked by a rational "
                              "normalized isogeny of degree %s" % degree)
         # Here we check that it probably is an isogeny and not any random polynomial.
         # See the discussion in the documentation.
-        even_part = ker_poly.gcd(E1.two_division_polynomial())
-        odd_part, _ = ker_poly.quo_rem(even_part)
+        even_part = ker_poly(X).gcd(E1.two_division_polynomial()(X))
+        odd_part, _ = ker_poly(X).quo_rem(even_part)
         check, sqodd_part = is_square(odd_part, root=True)
         if not check:
             raise ValueError("The two curves are not linked by a rational "
@@ -159,9 +163,9 @@ def isogeny_kernel(E1, E2, degree, algorithm="BMSS"):
 
         # Stark's algorithm returns the denominator of the x-component of the
         # isogeny, we get its squarefree part
-        ker_poly = isogeny_Stark(E1, E2, degree)
-        even_part = ker_poly.gcd(E1.two_division_polynomial())
-        odd_part, _ = ker_poly.quo_rem(even_part)
+        ker_poly = isogeny_Stark(E1, E2, degree, A, S)
+        even_part = ker_poly(X).gcd(E1.two_division_polynomial()(X))
+        odd_part, _ = ker_poly(X).quo_rem(even_part)
         check, sqodd_part = is_square(odd_part, root=True)
         if not check:
             raise RuntimeError("Stark's algorithm returned an unexpected result. Please report this bug.")
@@ -173,7 +177,7 @@ def isogeny_kernel(E1, E2, degree, algorithm="BMSS"):
 
 # In[6]:
 
-def isogeny_Stark(E1, E2, degree):
+def isogeny_Stark(E1, E2, degree, A, S):
     r"""
     Compute the kernel of the degree ``degree`` isogeny between ``E1`` and ``E2`` via
     Stark's algorithm.  There must be a degree ``degree``, rational, separable,
@@ -182,6 +186,8 @@ def isogeny_Stark(E1, E2, degree):
     :param E1: an elliptic curve in short Weierstrass form.
     :param E2: an elliptic curve in short Weierstrass form.
     :param degree: the degree of the isogeny from ``E1`` to ``E2``.
+    :param A: an univariate polynomial ring over the base field
+    :param S: a Laurent series ring over the base field
 
     :returns: the polynomial vanishing on the abscissae of the kernel
         of the isogeny. Notice that the abscissa of points of order greater than
@@ -229,8 +235,7 @@ def isogeny_Stark(E1, E2, degree):
     """
 
     K = E1.base_field()
-    R = PolynomialRing(K, 'x')
-    x = R.gen()
+    x = A.gen()
 
     try:
         wp1 = E1.weierstrass_p(prec=4*degree+4)  #BMSS claim 2*degree is enough, but it is not M09
@@ -239,7 +244,6 @@ def isogeny_Stark(E1, E2, degree):
         raise ZeroDivisionError("Stark's algorithm only works for characteristic 0 or greater than 4*degree + 6.")
 
     # viewed them as power series in Z = z^2
-    S = LaurentSeriesRing(K, 'Z')
     Z = S.gen()
     pe1 = 1/Z
     pe2 = 1/Z
@@ -303,7 +307,7 @@ def isogeny_Stark(E1, E2, degree):
 
 # In[7]:
 
-def isogeny_BMSS(E1, E2, degree):
+def isogeny_BMSS(E1, E2, degree, P):
     r"""
     Compute the kernel of the normalized isogeny between ``E1`` and ``E2`` via
     the BMSS algorithm.  There must be a rational, separable,
@@ -312,6 +316,7 @@ def isogeny_BMSS(E1, E2, degree):
     :param E1: an elliptic curve in the Weierstrass form `y^2 = f(x)`.
     :param E2: an elliptic curve in the Weierstrass form `y^2 = f(x)`.
     :param degree: a bound on the degree of the isogeny from E1 to E2.
+    :param P: a power series ring over the base field.
 
     :returns: the polynomial vanishing on the abscissae of the kernel
         of the isogeny, if the isogeny exists, or a random looking polynomial
@@ -483,8 +488,7 @@ def isogeny_BMSS(E1, E2, degree):
         raise ValueError("Curves must have a model of the form y^2 = f(x).")
 
     K = E1.base_field()
-    R = PowerSeriesRing(K, 'x')
-    x = R.gen()
+    x = P.gen()
 
     G = a6*x**3 + a4*x**2 + a2*x + 1
     H = b6*x**3 + b4*x**2 + b2*x + 1
@@ -497,7 +501,7 @@ def isogeny_BMSS(E1, E2, degree):
     # T == x * D.reverse() / N.reverse()
     U = T.shift(-1)
     N = berlekamp_massey(U.padded_list())
-    D = (U * R(N.reverse())).truncate().reverse()
+    D = (U * P(N.reverse())).truncate().reverse()
 
     # If the points of abscissa 0 are in the kernel,
     # correct the degree of D
