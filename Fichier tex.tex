@@ -16,18 +16,21 @@
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\Q}{\mathbb{Q}}
 \renewcommand{\H}{\mathbb{H}}
+\renewcommand{\P}{\mathbb{P}}
 \newcommand{\M}{\mathcal{M}}
 \renewcommand{\O}{\mathcal{O}}
 \newcommand{\Cl}{\mathcal{C}}
 \newcommand{\vers}{\rightarrow}
 \newcommand{\End}{\mathrm{End}}
 \newcommand{\Ell}{\mathcal{E}\ell\ell}
+\newcommand{\Spec}{\mathrm{Spec}\,}
 \renewcommand{\frak}{\mathfrak}
 \newcommand{\de}{\,:\,}
 
 \newtheorem{thm}{Théorème}[subsection]
 \newtheorem{lem}[thm]{Lemme}
 \newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollaire}
 \theoremstyle{definition}
 \newtheorem*{rem}{Remarque}
 \newtheorem{defi}[thm]{Définition}
@@ -198,6 +201,62 @@ Soit $L$ un corps de nombres, $E/L$ une courbe elliptique telle que $\End(E)\sim
 \end{thm}
 
 \newpage
+
+\section{Courbes modulaires}
+
+
+Le but de cette section est de définir les courbes modulaires, d'en expliciter les propriétés et des modèles naturels. L'intérêt de ces courbes est qu'elles paramétrisent naturellement les isogénies cycliques entre courbes elliptiques.
+
+\begin{prop}
+
+Notons $\H$ le demi-plan de Poincaré et $\Gamma(n)$, $\Gamma_0(n)$, $\Gamma_1(n)$ les sous-groupes usuels de $\Gamma(1).$ Alors :
+
+\begin{itemize}
+\item Le quotient $\H/\Gamma(n)$ peut être identifié à l'ensemble des classes d'isomorphisme de paires $(E,\phi)$, où $E$ est une courbe elliptique complexe et $\phi\de (\Z/n\Z)^2\vers E[n]$ est un isomorphisme de groupes compatible à l'accouplement de Weil.
+\item Le quotient $\H/\Gamma_0(n)$ peut être identifié à l'ensemble des classes d'isomorphisme des paires $(E,G)$, où $E$ est une courbe elliptique sur $\C$ et $G$ est un sous-groupe de $E[n]$ isomorphe à $\Z/n\Z$ (ou, de manière équivalente, à l'ensemble des classes d'isomorphisme des triplets $(E_1, E_2, \phi)$ où $\phi\de E_1\vers E_2$ est une isogénie cyclique de degré $n$).
+\item Le quotient $\H/\Gamma_1(n)$ peut être identifié à l'ensemble des classes d'isomorphisme des paires $(E,P)$, où $E$ est une courbe elliptique sur $\C$ et $P$ est un point de $E$ d'ordre $n$.
+\end{itemize}
+
+\end{prop}
+
+\begin{thm}
+
+Soit $Y$ l'un des trois quotients précédents. Il existe un nombre fini $P$ de points tel que $Y\cup P$ est muni d'une structure de surface de Riemann compacte : on appelle ces points les \emph{pointes} de $Y$. 
+
+Par conséquent, ces trois quotients sont canoniquement isomorphes aux surfaces de Riemann associées à une courbe algébrique projective lisse sur $\C$ (c'est une conséquence du théorème de Riemann-Roch).
+
+On note ces courbes respectivement $X(n)$, $X_0(n)$ et $X_1(n)$ ; les ouverts affines obtenus en retirant les pointes sont notés respectivement $Y(n)$, $Y_0(n)$ et $Y_1(n)$.
+
+\end{thm}
+
+L'étape suivante est de montrer que ces courbes algébriques sont naturellement définies sur certains corps de nombres.
+
+\begin{prop}[Construction pour $X_0(n)$]
+
+L'application 
+$$(j,\ j')\de \H\vers \C\times\C, \quad z\longmapsto (j(z),\ j(nz))$$ 
+se factorise par $\Gamma_0(n)$ et induit une application $X_0(n)\vers \P^1(\C)\times \P^1(\C)$ qui est birationnelle sur son image. Cette image est une courbe dans $\P^1\times\P^1$, donc le lieu des zéros d'un polynôme bivarié $\Phi_n$. Alors :
+\begin{itemize}
+\item $\Phi_n$ est à coefficients entiers.
+\item La normalisation $X_0(n)_\Q$ de la courbe définie par $\Phi_n$ dans $\P^1(\Q)\times \P^1(\Q)$ est un modèle de $X_0(n)$ sur $\Q$, c'est à dire :
+$$X_0(n)\ =\ X_0(n)_\Q \times_{\Q} \Spec\C.$$
+\item La normalisation $X_0(n)_\Z$ de la courbe définie par $\Phi_n$ dans $\P^1(\Z)\times \P^1(\Z)$ est un espace de modules grossier.
+\end{itemize}
+
+\end{prop}
+
+\begin{cor}
+
+Si $k$ est un corps algébriquement clos dans lequel $n$ est inversible, les $k$-points de $Y_0(n)_\Z$, la partie affine de $X_0(n)_\Z$, correspondent bijectivement
+aux classes d'isomorphisme d'isogénies de courbes elliptiques sur $k$ $\phi\de E_1\vers E_2$ cycliques de degré $n$.
+
+\end{cor}
+
+\begin{prop}
+
+Constructions de $Y_1(n)_{\Z\left[\frac{1}{n}\right]}$, $Y(n)_{\Z\left[\frac{1}{n},\zeta_n\right]}$.
+
+\end{prop}
 
 \section{Cryptosystème et algorithmes}
 
