@@ -1,6 +1,0 @@
-En ce moment :
--Essayer de trouver des courbes intéressantes avec de la torsion
--S'intéresser à l'algorithme SEA
--Aérer le code
--Continuer le fichier tex.
-
