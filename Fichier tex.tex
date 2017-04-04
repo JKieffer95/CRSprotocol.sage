@@ -10,9 +10,11 @@
 \usepackage{lmodern}
 \usepackage[french]{babel}
 \usepackage{fullpage}
+\usepackage[all]{xy}
 
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\C}{\mathbb{C}}
+\newcommand{\A}{\mathbb{A}}
 \newcommand{\F}{\mathbb{F}}
 \newcommand{\Q}{\mathbb{Q}}
 \renewcommand{\H}{\mathbb{H}}
@@ -20,6 +22,7 @@
 \newcommand{\M}{\mathcal{M}}
 \renewcommand{\O}{\mathcal{O}}
 \newcommand{\Cl}{\mathcal{C}}
+\renewcommand{\b}{\backslash}
 \newcommand{\vers}{\rightarrow}
 \newcommand{\End}{\mathrm{End}}
 \newcommand{\Ell}{\mathcal{E}\ell\ell}
@@ -78,15 +81,9 @@ En particulier, deg : $\End(E)\vers \End(E)$ est une forme quadratique et $[m]_E
 \end{enumerate}
 \end{prop}
 
-\begin{rem}
-L'identification $\End(E)\simeq \O$ peut être rendue canonique de la façon suivante : sur $\C$, on regarde le pullback de la différentielle invariante. Sur un corps fini ?
-\end{rem}
 
-Dans la suite de ce document, on s'intéresse à des courbes elliptiques ordinaires sur un corps fini : on étudie donc plus en détail le cas de la multiplication complexe par un ordre dans un corps quadratique imaginaire.
+Dans la suite de ce document, on s'intéresse à des courbes elliptiques ordinaires sur un corps fini : on étudie donc plus en détail le cas de la multiplication complexe par un ordre dans un corps quadratique imaginaire. Pour cela, quelques résultats liminaires sur les ordres quadratiques.
 
-\subsection{Groupe de classe d'un ordre quadratique}
-
-On suit ici Cox.
 
 \begin{defi}
 Soit $K$ un corps de nombres. Un \emph{ordre} de $K$ est un sous-anneau $\O$ de $K$ qui est un $\Z$-module de type fini et engendre $K$ comme $\Q$-espace vectoriel. En particulier, $\O\subset \O_K$, $\O$ est un $\Z$-module libre de rang $[K:\Q]$, et $\O$ est d'indice fini dans $\O_K$.
@@ -112,38 +109,176 @@ Idéaux d'un ordre quadratique. Norme. Idéaux propres. Idéaux fractionnaires. 
 Idéaux premiers au conducteur. Ce sont des idéaux propres. Le groupe de classe reste le même si l'on se restreint aux idéaux premiers au conducteur.
 \end{defi}
 
-\subsection{Action sur $\Ell_k(\O)$}
 
-Cf Sutherland.
+
+\subsection{Multiplication complexe sur $\C$}
+
+
+Ce thème étant déjà traité en détail dans Silverman, on se contente ici de donner les résultats importants. Dans cette section, on fixe un ordre $\O$ dans un corps quadratique $K\subset \C$, et l'on note $\Ell_\C(\O)$ l'ensemble des courbes elliptiques sur $\C$ (à isomorphisme près) ayant multiplication complexe par $\O$. Comme d'habitude, on identifiera un élément de cet ensemble avec ses représentants.
+
+Dans Silverman, on suppose que $\O$ est l'ordre maximal, mais cette supposition n'est pas essentielle.
 
 \begin{prop}
-Soit $E/k$ une courbe elliptique. Alors pour tout sous-groupe fini $S$ de $E(\bar{k})$, il existe une courbe elliptique sur $\bar{k}$ notée $E/S$ et une isogénie séparable $\alpha\de E \vers E/S$, uniques à isomorphisme près, tel que $\alpha$ soit de noyau $S$. De plus, on peut calculer une telle isogénie à l'aide des formule de Vélu. Enfin si $S$ est défini sur $k$, on peut choisir $E/S$ et $\alpha$ définis sur $k$. De plus, $\alpha$ a pour degré le cardinal de $S$.
+
+Soit $E\in \Ell_\C(\O)$. Alors il existe un isomorphisme canonique
+
+$$[\,\cdot\,]\de \O\vers \End(E)$$
+
+tel que l'on ait pour tout $\omega\in H^0(E,\Omega^1)$ :
+
+$$\forall\,\alpha\in\O,\ [\alpha]^*\omega = \alpha \omega.$$
+
 \end{prop}
 
-\begin{rem}
-C'est sans doute vrai en regardant des isogénies pas forcément séparables, mais il ne faut plus alors parler des $\bar{k}$-points : il faut se donner un sous-schéma en groupe fini (et plat) de $E$. De plus le degré de l'isogénie est alors le rang du noyau.
-\end{rem}
+On dit qu'un tel isomorphisme est \emph{normalisé}, et on l'utilisera silencieusement dans la suite pour identifier $\O$ et $\End(E)$. On rappelle au passage que $H^0(E,\Omega^1)$ est un $\C$-espace vectoriel de dimension 1.
 
-On suppose maintenant que $E/k$ est une courbe elliptique telle que $\End(E)\simeq \O$ est un ordre dans un corps quadratique imaginaire $K$.
+\begin{prop}
+Pour tout sous-groupe fini $S$ de $E$, il existe une isogénie $E\vers E'$ de noyau $S$, et celle-ci est unique à isomorphisme près.
+\end{prop}
 
 \begin{defi}
-Soit $\frak a$ un $\O$-idéal inversible. On note $E[\frak a]$ le sous-schéma en groupe de $E$ défini par les équations $\alpha(P)=0$ pour $\alpha\in\frak a$, et l'on note $\phi_{\frak a}$ l'isogénie de noyau $E[\frak a]$ donnée par la proposition précédente. On a deg $\phi_{\frak a}=N(\frak a)$. On note $\frak{a}\cdot E$ la courbe elliptique image de cette isogénie.
+Soit $\frak a$ un idéal inversible de $\O$. On définit
+
+$$E[\frak a]=\bigcap_{\phi\in \frak a} \mathrm{Ker}\,\phi.$$
+
+On note $\phi_{\frak a}$ l'isogénie de noyau $E[\frak a]$, et $\frak a\cdot E$ sa courbe image (qui est bien définie comme élément de $\Ell_\C(\O)$).
 \end{defi}
 
 \begin{prop}
-La courbe $\frak{a}\cdot E$ obtenue a également multiplication complexe par $\O$. De plus, cela définit une action du groupe des idéaux fractionnaires de $\O$ sur $Ell_{\bar{k}}(\O)$ qui est triviale sur les idéaux fractionnaires principaux, donc une action de $\Cl(\O)$ sur $Ell_{\bar{k}}(\O)$. Cette action est simplement transitive.
+
+Pour tout idéal inversible $\frak a$ de $\O$ et toute courbe $E=\C/\Lambda\in \Ell_\C(\O)$, on a :
+
+$$\frak a\cdot E = \C/\frak a^{-1} \Lambda.$$
+
+Le degré de $\phi_{\frak a}$ est la norme de l'idéal $\frak a$, et la courbe $\frak a\cdot E$ a également multiplication complexe par $\O$. Cette opération définit une action du groupe des idéaux fractionnaires inversibles de $\O$ sur $\Ell_\C(\O)$, qui est triviale pour les idéaux principaux. Elle se factorise donc en une action
+
+$$\Cl(\O) \circlearrowright \Ell_\C(\O).$$
+
+Cette dernière action est simplement transitive.
+
+\end{prop}
+
+La preuve de ce résultat utilise de manière essentielle le fait qu'une courbe elliptique complexe est un tore $\C/\Lambda$ ; elle n'est donc pas transposable telle quelle en caractéristique positive notamment.
+
+Le but est maintenant d'adapter ce résultat à la caractéristique positive, et notamment les corps finis.
+
+
+
+
+\subsection{Théorèmes de relèvement}
+
+
+Une première direction pour adapter ces résultats aux corps finis est d'utiliser les théorèmes suivants, dus à Deuring. On se donne ici $k$ un corps fini de caractéristique $p$.
+
+
+\begin{thm}[Relèvement en caractéristique zéro]
+
+Soit $E/k$ une courbe elliptique et $\alpha$ un endomorphisme de $E$. Alors il existe un corps de nombres $L$, une courbe elliptique $E^0/L$, un endomorphisme $\alpha^0$ de $E^0$ et un premier $\frak P$ de $L$ de corps résiduel $k$, tels que $E^0$ a bonne réduction à $\frak P$, $E$ est isomorphe à $\bar{E^0}$ et $\alpha$ correspond à $\bar{\alpha^0}$ sous cet isomorphisme.
+
+\end{thm}
+
+En particulier, si $\End(E)$ est isomorphe à un ordre $\O$, on peut choisir pour $\alpha$ un générateur de $\End(E)$ et on obtient une surjection $\End(E^0)\vers \End(E).$ Le résultat suivant montre en fait que dans ce cas, on obtient une bijection entre les anneaux d'endomorphismes.
+
+\begin{thm}[Bonne réduction]
+
+Soit $L$ un corps de nombres, $E/L$ une courbe elliptique telle que $\End(E)\simeq \O$ est un ordre dans un corps imaginaire quadratique $K$. Soit $p$ un nombre premier et $\frak P$ un premier de $L$ au-dessus de $p$, où $E$ a bonne réduction. Alors $\bar{E}$ est ordinaire si et seulement si $p$ est totalement scindé dans $K$. Dans ce cas, si $c=p^r c_0$ est le conducteur de $\O$, on a :
+
+\begin{itemize}
+\item[(i)] $\End(\bar{E})=\Z+c_0 \O_K$ est l'ordre de $K$ de conducteur $c_0$.
+\item[(ii)] Si $c=c_0$, alors la réduction donne un isomorphisme $\End(E)\vers\End(\bar{E})$.
+\end{itemize}
+
+De plus, $\End(E)\vers\End(\bar{E})$ préserve le degré.
+
+\end{thm}
+
+Utilisons maintenant ce résultat pour adapter la section précédente au cas des courbes elliptiques sur un corps fini. On fixe à partir de maintenant un ordre quadratique $\O$ (que l'on voit dans $\C$) et un premier $\frak p$ de $\O$ au-dessus de $p$ ; il y a deux possibilités selon le second théorème. On notera par $\alpha\vers\bar{\alpha}$ la réduction mod $\frak p$.
+
+
+\begin{prop}
+
+Soit $E\in \Ell_k(\O)$. Alors il existe un unique isomorphisme
+
+$$[\,\cdot\,] \de \O \vers \End(E)$$
+
+tel que pour tout $\omega \in H^0(E,\Omega^1)$ on ait :
+
+$$\forall \, \alpha \in \O,\ [\alpha]^* \omega = \bar{\alpha}\omega.$$
+
+De plus, pour tout corps de nombre $L$ contenant $\O$, toute place $\frak P$ de $L$ au-dessus de $\frak p$, pour toute courbe elliptique $E^0/L$ se réduisant en $E$ avec un isomorphisme d'anneaux d'endomorphismes, on a un diagramme commutatif :
+
+$$
+\shorthandoff{;:!?}
+\xymatrix @!=8mm {
+\O \ar[rr]^\sim_{[\,\cdot\,]} \ar[rd]^\sim_{[\,\cdot\,]} & & \End(E^0) \ar[ld]^{\mathrm{mod}\,\frak P} \\
+ & \End(E) & 
+}
+$$
+
+où la première ligne est normalisée comme dans la section précédente.
+
 \end{prop}
 
 \begin{proof}
-Dans le cas complexe, cf. Silverman. Pour les corps finis, on utilise le théorème de relèvement de Deuring.
 
-Transitivité : soient $\bar{E_1},\ \bar{E_2}$ deux courbes elliptiques à CM par $\O$ sur un corps fini $k$. Alors on se donne deux relèvements à $\C$ qui ont 
+On construit cet isomorphisme à l'aide du théorème de relèvement (si l'on n'avait pas la bonne place au-dessus de $\frak p$, on peut faire agir Galois). L'unicité provient du fait qu'il n'existe que deux isomorphismes de $\O$ vers $\End(E)$ ; l'un envoie un certain élément $t\in \O$ sur le Frobenius $\pi = F_{E/k}$, et l'autre sur $\widehat{\pi}.$ On peut les distinguer avec la condition sur les pullbacks, puisque dans le cas ordinaire, $\pi$ n'est pas séparable alors que $\widehat{\pi}$ l'est.
+
+Le diagramme commutatif découle alors immédiatement de l'unicité.
+\end{proof}
+
+A l'aide de cette identification, on peut maintenant définir comme précédemment $\frak a\cdot E$ pour $\frak a$ un idéal inversible de $\O$ et $E\in \Ell_k(\O)$. La courbe $\frak a\cdot E$ reste définie sur $k$, puisque $E[\frak a]$ l'est. On \emph{admet} alors le résultat suivant :
+
+\begin{prop}
+
+Pour tout idéal $\frak a$ inversible de $\O$ de norme première à $p$, le sous-groupe $E[\frak a](\bar{k}\subset E(\bar{k})$ est de cardinal $N(\frak a)$.
+
+\end{prop}
+
+On remarque que c'est vrai lorsque $\frak a$ est l'idéal engendré par un entier $n$ premier à $p$ ; pour adapter cette proposition au cas où $p$ divise la norme, il faut parler du rang du schéma en groupes fini plat $E[\frak a]$.
+
+En particulier cela montre que $\phi_{\frak a}^0$, définie en partant d'un relèvement en caractéristique zéro, se réduit en $\phi_{\frak a}$. On peut alors retrouver l'analogue du résultat sur $\C$ :
+
+\begin{prop}
+
+Cette opération définit une action de $\Cl(\O)$ sur $\Ell_k(\O)$ qui est simplement transitive.
+
+\end{prop}
+
+\begin{proof}
+
+On a vu que si $E^0$ est un bon relèvement de $E$ en caractéristique zéro, $\phi_{\frak a}^0$ se réduit en $\phi_{\frak a}$ et donc $\frak a\cdot E^0$ se réduit en $\frak a\cdot E$. On en déduit immédiatement que c'est une action. De plus on peut utiliser le théorème de bonne réduction pour voir que $\frak a\cdot E$ a également multiplication complexe par $\O$.
+
+Montrons qu'elle est transitive : si $E$ et $E'$ sont données en caractéristique $p$, choisissons deux bons relèvements $E^0, E'^0$ en caractéristique 0. Il existe alors un idéal $\frak a$ envoyant $E^0$ sur $E'^0$, et en réduisant on voit que $\phi_{\frak a}$ a bien pour image $E'$.
+
+Enfin étant donné $E$, montrons que son stabilisateur est l'ensemble des idéaux principaux : si $\frak a$ est principal, il laisse un bon relèvement $E^0$ invariant, et donc $E$ également. Réciproquement, si $\frak a$ laisse $E$ invariante, on a un diagramme commutatif
+
+$$
+\shorthandoff{;:!?}
+\xymatrix @!=8mm {
+E^0 \ar[rr]^{\phi_{\frak a}^0} \ar[rd]_{\mathrm{mod}\,\frak P} & & E'^0 \ar[ld]^{\mathrm{mod}\,\frak P} \\
+ & E \ar@(dr,dl)^{\phi_{\frak a}} & 
+}
+$$
+
+Mais $\phi_{\frak a}$ admet également un relèvement $\psi\in \End(E^0)$ ; tous ces endomorphismes sont de degré $N(\frak a)$ selon le fait admis. On voit alors que $\psi$ et $\phi_{\frak a}^0$ ont même noyau, ce qui montre $\psi=\phi_{\frak a}^0$ et $\frak a\cdot E^0 = E^0$. Ainsi $\frak a$ est principal selon la section précédente.
 \end{proof}
 
 
-\begin{rem}
-Si l'une de ces courbes est définie sur $k$, on peut regarder uniquement les courbes définies sur $k$ car tous les $E[\frak a]$ sont définis sur $k$ (les idéaux sont stables par multiplication par le Frobenius). Ainsi les courbes à multiplication complexe par $\O$ sont soit toutes définies sur $k$, soit aucune ne l'est.
-\end{rem}
+Outre le fait d'admettre un résultat qui n'est pas élémentaire, cette méthode a le désavantage de très mal se généraliser aux corps de caractéristique positive qui ne sont pas des corps finis.
+
+Une façon peut-être plus naturelle d'adapter aux corps finis les résultats obtenus sur $\C$ est d'utiliser les modules de Tate, comme des espaces naturels attachés aux courbes elliptiques dans lesquels $\End(E)$ se comporte effectivement comme un réseau.
+
+
+
+
+\newpage
+
+\subsection{Théorèmes de Tate}
+
+
+
+
+\newpage
 
 \subsection{Le graphe d'isogénies}
 
@@ -154,51 +289,39 @@ Dans cette partie, on fixe un nombre premier $l$ (différent de la caractéristi
 \begin{defi}
 Le \emph{graphe de $l$-isogénies} sur $k$, noté $G_l(k)$, est le graphe non orienté $(V,E)$ où :
 \begin{itemize}
-\item[•] $V$ est l'ensemble des courbes elliptiques définies sur $k$ à $\bar{k}$-isomorphisme près (le $j$-invariant donne une bijection $V\vers k$).
-\item[•] $E$ contient un exemplaire de l'arête $(E_1,E_2)$ pour chaque classe d'isomorphisme d'isogénies $E_1\vers E_2$ de degré $l$. (Le graphe est bien non orienté vu l'existence de l'isogénie duale).
+\item $V$ est l'ensemble des courbes elliptiques définies sur $k$ à $\bar{k}$-isomorphisme près (le $j$-invariant donne une bijection $V\vers k$).
+\item $E$ contient un exemplaire de l'arête $(E_1,E_2)$ pour chaque classe d'isomorphisme d'isogénies $E_1\vers E_2$ de degré $l$. (Le graphe est bien non orienté vu l'existence de l'isogénie duale).
 \end{itemize}
 
 \end{defi}
 
-\begin{defi}
-Isogénies horizontales et verticales (ascendantes, descendantes). Remarque : deux courbes isogènes ont la même algèbre d'endomorphismes.
-\end{defi}
+
 
 \begin{prop}
+
 Les isogénies horizontales correspondent à l'action du groupe de classe de $\O$: une courbe elliptique de départ $E$ étant donnée, on a la bijection
+
 $$\begin{aligned}
 & \left\{\text{\emph{Isogénies horizontales}}\right\} & \longleftrightarrow &\quad \{\text{\emph{Classes d'idéaux de}}\ \O \} &\\
 & \quad\qquad\qquad \alpha & \longmapsto &\ \ \{\phi\in\O\ :\ \mathrm{Ker}\,\alpha \subset\mathrm{Ker}\,\phi\} &\\
 & \quad\qquad\qquad \phi_{\frak a} & \longleftarrow & \quad\qquad\qquad \frak a &
 \end{aligned}$$
+
 \end{prop}
 
-Vu en termes de l'action de $\Cl(\O)$ sur l'ensemble $Ell_k(\O)$, on s'intéresse à l'action des $\O$-idéaux de norme $l$. Si $l$ divise l'indice de $\O$ dans $\O_K$, il n'existe pas de tel idéal. Sinon, il y a plusieurs cas :
-\begin{itemize}
-\item[•] Si $l$ est ramifié dans $K$, alors il y a un unique tel idéal.
-\item[•] Si $l$ est inerte dans $K$, alors il n'existe pas de tel idéal.
-\item[•] Si $l$ est scindé dans $K$, alors il existe exactement deux tels idéaux.
-\end{itemize}
+C'est une reformulation de l'action simplement transitive de la section précédente.
 
-Selon les cas, on a donc une bonne description des isogénies horizontales. Dans le premier cas, on obtient des boucles ou des cycles à deux sommets; dans le second cas, on obtient des sommets isolés; dans le troisième cas, soit les deux idéaux sont égaux dans $\Cl(\O)$ et c'est similaire au premier cas (avec des arêtes doubles), soit ils sont distincts et on obtient des cycles de longueur au moins 3.
+Vu en termes de l'action de $\Cl(\O)$ sur l'ensemble $Ell_k(\O)$, on s'intéresse à l'action des $\O$-idéaux de norme $l$. Si $l$ divise l'indice de $\O$ dans $\O_K$, il n'existe pas de tel idéal. Sinon, il y a 0, 1 ou 2 tels idéaux selon si $l$ est inerte, ramifié ou scindé dans $K$.
 
+Selon les cas, on a donc une bonne description des isogénies horizontales (simplement, deux idéaux distincts dans $K$ peuvent se trouver égaux dans le groupe de classe).
 
-\subsection{Théorèmes de relèvement}
+Deux courbes isogènes ayant même cardinal, une courbe elliptique dans une certaine composante connexe du graphe de $l$-isogénies a son anneau d'endomorphismes compris entre $\Z[\pi]$ et $\O_K$. Il n'y a donc pas d'isogénies verticales si et seulement si $l$ ne divise pas le conducteur de $\Z[\pi]$.
+
+On peut montrer que les composantes connexes du graphe de $l$-isogénies ont une structure particulière : ce sont des \emph{volcans}.
 
 
-\begin{thm}[Deuring]
-Soit $k$ un corps fini de caractéristique $p$, $E_0/k$ une courbe elliptique et $\alpha_0$ un endomorphisme de $E_0$. Alors il existe un corps de nombres $K$, une courbe elliptique $E/K$, un endomorphisme $\alpha$ de $E$ et un premier $\frak P$ de $K$ de corps résiduel $k$, tels que $E$ a bonne réduction a $\frak P$, $E_0$ est isomorphe à $\bar{E}$ et $\alpha_0$ correspond à $\bar{\alpha}$ sous cet isomorphisme.
-\end{thm}
 
 
-\begin{thm}[Lang]
-Soit $L$ un corps de nombres, $E/L$ une courbe elliptique telle que $\End(E)\simeq \O$ est un ordre dans un corps imaginaire quadratique $K$. Soit $p$ un nombre premier et $\frak P$ un premier de $L$ au-dessus de $p$, où $E$ a bonne réduction. Alors $\bar{E}$ est ordinaire si et seulement si $p$ est totalement scindé dans $K$. Dans ce cas, si $c=p^r c_0$ est le conducteur de $\O$, on a :
-\begin{itemize}
-\item[(i)] $\End(\bar{E})=\Z+c_0 \O_K$ est l'ordre de $K$ de conducteur $c_0$.
-\item[(ii)] Si $c=c_0$, alors la réduction donne un isomorphisme $\End(E)\vers\End(\bar{E})$.
-\end{itemize}
-
-\end{thm}
 
 \newpage
 
@@ -207,56 +330,169 @@ Soit $L$ un corps de nombres, $E/L$ une courbe elliptique telle que $\End(E)\sim
 
 Le but de cette section est de définir les courbes modulaires, d'en expliciter les propriétés et des modèles naturels. L'intérêt de ces courbes est qu'elles paramétrisent naturellement les isogénies cycliques entre courbes elliptiques.
 
+
+
+\subsection{Courbes modulaires sur $\C$}
+
 \begin{prop}
 
-Notons $\H$ le demi-plan de Poincaré et $\Gamma(n)$, $\Gamma_0(n)$, $\Gamma_1(n)$ les sous-groupes usuels de $\Gamma(1).$ Alors :
+Notons $\H$ le demi-plan de Poincaré et pour $n\geq 1$, $\Gamma(n)$, $\Gamma_0(n)$, $\Gamma_1(n)$ les sous-groupes usuels de $\Gamma(1).$ Alors :
 
 \begin{itemize}
-\item Le quotient $\H/\Gamma(n)$ peut être identifié à l'ensemble des classes d'isomorphisme de paires $(E,\phi)$, où $E$ est une courbe elliptique complexe et $\phi\de (\Z/n\Z)^2\vers E[n]$ est un isomorphisme de groupes compatible à l'accouplement de Weil.
-\item Le quotient $\H/\Gamma_0(n)$ peut être identifié à l'ensemble des classes d'isomorphisme des paires $(E,G)$, où $E$ est une courbe elliptique sur $\C$ et $G$ est un sous-groupe de $E[n]$ isomorphe à $\Z/n\Z$ (ou, de manière équivalente, à l'ensemble des classes d'isomorphisme des triplets $(E_1, E_2, \phi)$ où $\phi\de E_1\vers E_2$ est une isogénie cyclique de degré $n$).
-\item Le quotient $\H/\Gamma_1(n)$ peut être identifié à l'ensemble des classes d'isomorphisme des paires $(E,P)$, où $E$ est une courbe elliptique sur $\C$ et $P$ est un point de $E$ d'ordre $n$.
+\item Le quotient $\Gamma(n)\b \H$ peut être identifié à l'ensemble des classes d'isomorphisme de paires $(E,\phi)$, où $E$ est une courbe elliptique complexe et $\phi\de (\Z/n\Z)^2\vers E[n]$ est un isomorphisme de groupes compatible à l'accouplement de Weil.
+\item Le quotient $\Gamma_0(n)\b \H$ peut être identifié à l'ensemble des classes d'isomorphisme des paires $(E,G)$, où $E$ est une courbe elliptique sur $\C$ et $G$ est un sous-groupe de $E[n]$ isomorphe à $\Z/n\Z$ (ou, de manière équivalente, à l'ensemble des classes d'isomorphisme des triplets $(E_1, E_2, \phi)$ où $\phi\de E_1\vers E_2$ est une isogénie cyclique de degré $n$).
+\item Le quotient $\Gamma_1(n)\b \H$ peut être identifié à l'ensemble des classes d'isomorphisme des paires $(E,P)$, où $E$ est une courbe elliptique sur $\C$ et $P$ est un point de $E$ d'ordre $n$.
 \end{itemize}
 
 \end{prop}
 
-\begin{thm}
+En effet, on sait que l'application
 
-Soit $Y$ l'un des trois quotients précédents. Il existe un nombre fini $P$ de points tel que $Y\cup P$ est muni d'une structure de surface de Riemann compacte : on appelle ces points les \emph{pointes} de $Y$. 
+$$\tau \longmapsto \C/\Lambda_\tau,\quad \Lambda_\tau = \Z \oplus \Z\tau$$
 
-Par conséquent, ces trois quotients sont canoniquement isomorphes aux surfaces de Riemann associées à une courbe algébrique projective lisse sur $\C$ (c'est une conséquence du théorème de Riemann-Roch).
+induit une bijection entre le quotient $\Gamma(1)\b \H$ et l'ensemble des courbes elliptiques sur $\C$ à isomorphisme près. On peut ensuite expliciter chacune des autres bijections :
 
-On note ces courbes respectivement $X(n)$, $X_0(n)$ et $X_1(n)$ ; les ouverts affines obtenus en retirant les pointes sont notés respectivement $Y(n)$, $Y_0(n)$ et $Y_1(n)$.
+$$\tau\in \Gamma(n)\b \H \longmapsto \C/\Lambda_\tau,\ (\frac{1}{n},\frac{\tau}{n})$$
+
+$$\tau\in \Gamma_0(n)\b \H \longmapsto \C/\Lambda_\tau, \{\frac{a}{n},\ 0\leq a<n\}$$
+
+$$\tau\in \Gamma_1(n)\b \H \longmapsto \C/\Lambda_\tau,\ \frac{1}{n}.$$
+
+On dit que \emph{les surfaces $\Gamma(n)\b \H$, $\Gamma_0(n)\b \H$ et $\Gamma_1(n)\b \H$ représentent les problèmes modulaires} de classification de ces structures à isomorphisme près. On note ces surfaces respectivement $Y(n)_\C$, $Y_0(n)_\C$ et $Y_1(n)_\C$.
+
+On pourrait regarder des problèmes modulaires donnés par d'autres sous-groupes d'indice fini de $\Gamma(1)$, mais ils ont une formulation moins évidente.
+
+Si $Y$ est l'un des trois quotients précédents, on peut montrer qu'il existe un nombre fini $P$ de points tel que $Y\cup P$ est muni d'une structure de surface de Riemann compacte $X$ : on appelle ces points les \emph{pointes} de $Y$. Par conséquent, ces trois quotients sont canoniquement isomorphes aux surfaces de Riemann associées à une courbe algébrique projective lisse sur $\C$ (c'est une conséquence du théorème de Riemann-Roch). $Y$ correspond alors à une partie affine de $X$.
+
+\begin{defi}
+
+Plus généralement, soit $S \vers \Spec\Z\left[\frac{1}{n}\right]$ un schéma. On note $Y(n)_S$, $Y_0(n)_S$, $Y_1(n)_S$ l'ensemble des \og classes d'isomorphisme\fg de courbes elliptiques relatives sur $S$ munies respectivement :
+
+\begin{itemize}
+
+\item d'un isomorphisme $(\Z/n\Z)^2_S\simeq E[n]$,
+\item d'un morphisme $(\Z/n\Z)_S \vers E[n]$ injectif sur toutes les fibres,
+\item d'une section $S\vers E[n]$ d'ordre $n$ sur toutes les fibres géométriques.
+
+\end{itemize}
+
+\end{defi}
+
+Une question naturelle est alors de se demander si ces ensembles peuvent être naturellement interprétés comme les $S$-points d'une courbe algébrique, et si la courbe en question peut être choisie indépendamment de $S$. La réponse à cette question n'est pas évidente, notamment pour $Y_0(n)$ dont le problème modulaire associé n'est pas rigide.
+
+
+\newpage
+
+\subsection{\'Equations explicites de certaines courbes modulaires}
+
+
+Dans les algorithmes de la suite, on utilise une courbe modulaire donnée par une équation explicite pour calculer des isogénies entre courbes elliptiques sur un corps fini. Il est donc important de disposer de telles équations en pratique.
+
+Cependant, même dans le cas complexe, ces courbes n'admettent en général pas d'équation agréable. Deux cas font exception : les courbes $Y(1)$ et d'une certaine façon $Y_0(n)$.
+
+\textbf{Le cas $Y(1)$.} On sait que deux courbes elliptiques complexes sont isomorphes si et seulement si elles ont même $j$-invariant. D'autre part la fonction modulaire $j$ est surjective, donc fournit un isomorphisme
+
+$$Y(1)_\C\vers \C.$$
+
+De même si $S$ est un schéma quelconque, on dispose d'un isomorphisme
+
+$$Y(1)_S\vers \A^1_S .$$
+
+Autrement dit, \emph{la courbe modulaire $Y(1)$ est l'espace affine de dimension 1.}
+
+
+\textbf{Le cas $Y_0(n)$.} On a vu que l'on peut reformuler le problème modulaire associé à $Y_0$ sous la forme du problème de $n$-isogénie cyclique $E\vers E'$. On peut alors définir une application
+$$(E\vers E') \longmapsto (E, E')$$
+de $Y_0(n)$ vers $Y(1)\times Y(1)$. Dans le cas complexe, elle s'écrit
+
+$$Y_0(n)_\C \vers \C^2,\quad \tau\vers (j(\tau), j(n\tau)).$$
+
+On peut montrer que l'image de cette application est la courbe définie par un polynôme à coefficients entiers, que l'on introduit maintenant.
+
+
+\begin{defi}
+Soit $m\geq 1$ un entier. On définit
+$$C(m)=\left\{ 
+\left(
+\begin{matrix}
+a & b \\
+0 & d 
+\end{matrix}
+\right)
+\in \M_2(\Z)\ :\ ad=m,\ a>0,\ 0\leq b<d,\ \mathrm{pgcd}(a,b,d)=1\right\}.$$
+\end{defi}
+
+\begin{lem}
+Les $(\sigma^{-1}\Gamma(1)\sigma)\cap \Gamma(1)$ pour $\sigma\in C(m)$ sont exactement les classes à droite de $\Gamma_0(m)$ dans $\Gamma(1)$.
+\end{lem}
+
+
+\begin{thm}[Polynômes modulaires]
+
+Soit $m\geq 1$ un entier. Il existe un unique  polynôme $\Phi_m \in \Z[X,Y]$, appelé \emph{polynôme modulaire} de degré $m$, tel que
+$$\forall \tau\in\H,\ \Phi_m(X,j(\tau))=\prod_{\sigma\in C(m)} (X-j(\sigma\tau)).$$
+De plus, on a les propriétés suivantes :
+
+\begin{itemize}
+\item[(i)] $\Phi_m(X,Y)=\Phi_m(Y,X)$,
+\item[(ii)] $\Phi_m(X,Y)$ est irréductible dans $\Z[X,Y]$.
+\end{itemize}
 
 \end{thm}
 
-L'étape suivante est de montrer que ces courbes algébriques sont naturellement définies sur certains corps de nombres.
+Ainsi l'image de l'application $Y_0(n)_\C\vers \C^2$ est exactement le lieu des zéros de ce polynôme $\Phi_n$.
 
-\begin{prop}[Construction pour $X_0(n)$]
+Cependant, on ne peut pas vraiment dire que $\Phi_n=0$ définit une équation de la courbe modulaire $Y_0(n)_\C$, car le morphisme $Y_0(n)\vers \C^2$ n'est pas injectif. En effet, il existe des couples de réseaux $(\Lambda, \Lambda')$ tels qu'il existe plusieurs inclusions $\Lambda\vers\Lambda'$ de conoyau $\Z/n\Z$. Ces points singuliers correspondent à des points de $Y(1)$ ayant multiplication complexe, notamment par $\Z[i]$ ou $\Z[j]$ ce qui implique l'existence d'automorphismes non triviaux.
 
-L'application 
-$$(j,\ j')\de \H\vers \C\times\C, \quad z\longmapsto (j(z),\ j(nz))$$ 
-se factorise par $\Gamma_0(n)$ et induit une application $X_0(n)\vers \P^1(\C)\times \P^1(\C)$ qui est birationnelle sur son image. Cette image est une courbe dans $\P^1\times\P^1$, donc le lieu des zéros d'un polynôme bivarié $\Phi_n$. Alors :
+Ainsi la courbe $\Phi_n=0$ détermine une courbe plane singulière qui, sur $\C$, est birationnelle à $Y_0(n)$. En dehors des points singuliers, on dispose donc tout de même d'une équation qui permet, étant donnée une courbe, de déterminer les courbes que l'on peut atteindre par une isogénie de degré $n$.
+
+Pour se débarasser des points singuliers, on pourrait rigidifier la situation en rajoutant une structure de niveau $M$, avec $M$ grand ; on aurait alors une application
+
+$$Y_0(n)(M)_\C\vers Y(M)_\C^2$$
+
+qui est une immersion fermée, mais ce n'est guère utile car la courbe $Y(M)$ n'a pas vraiment d'équation explicite agréable, contrairement à $Y(1)$.
+
+Nous avons travaillé jusqu'à présent sur $\C$, mais il est crucial de savoir que les équations données par le polynôme modulaire $\Phi_n$ restent valables sur un corps quelconque (en particulier pour les corps finis). Pour cela, il faut faire intervenir des notions plus avancées de géométrie algébrique.
+
+\newpage
+
+\subsection{Courbes modulaires générales}
+
+
+Nous nous concentrons ici sur le cas de la courbe $Y_0(n)$, mais les autres cas mentionnés précédemment fonctionnent de manière similaire ; c'est même plus facile d'une certaines façon car il n'y a pas de problème de non-rigidité. Le théorème principal est le suivant.
+
+\begin{thm}[Katz-Mazur]
+Il existe un schéma $Y_0(n)\vers \Spec \Z\left[\frac{1}{n}\right]$ ayant les propriétés suivantes.
+
 \begin{itemize}
-\item $\Phi_n$ est à coefficients entiers.
-\item La normalisation $X_0(n)_\Q$ de la courbe définie par $\Phi_n$ dans $\P^1(\Q)\times \P^1(\Q)$ est un modèle de $X_0(n)$ sur $\Q$, c'est à dire :
-$$X_0(n)\ =\ X_0(n)_\Q \times_{\Q} \Spec\C.$$
-\item La normalisation $X_0(n)_\Z$ de la courbe définie par $\Phi_n$ dans $\P^1(\Z)\times \P^1(\Z)$ est un espace de modules grossier.
+
+\item{(i)} $Y_0(n)$ est une solution du problème modulaire pour $\Gamma_0(n)$, au sens où pour tout corps $k$ dans lequel $n$ est inversible, les $k$-points de $Y_0(n)$ sont en bijection avec les classes d'isomorphisme (sur $\bar{k}$) d'isogénies cycliques de degré $n$ entre deux courbes elliptiques sur $k$.
+
+\item{(ii)} $Y_0(n)\vers \Spec \Z\left[\frac{1}{n}\right]$ est fini et plat.
+
+\item({iii)} On dispose d'un morphisme de schémas 
+$$Y_0(n) \vers Y\times Y$$
+où $Y$ est l'espace affine de dimension 1, qui sur $\C$ devient l'application étudiée précédemment.
+
 \end{itemize}
 
-\end{prop}
+\end{thm}
 
-\begin{cor}
+Il découle alors formellement de ce théorème, et du cas complexe étudié ci-dessus, que l'image schématique de $Y_0(n)$ dans $Y\times Y$ est exactement la courbe définie par le polynôme $\Phi_n$.
 
-Si $k$ est un corps algébriquement clos dans lequel $n$ est inversible, les $k$-points de $Y_0(n)_\Z$, la partie affine de $X_0(n)_\Z$, correspondent bijectivement
-aux classes d'isomorphisme d'isogénies de courbes elliptiques sur $k$ $\phi\de E_1\vers E_2$ cycliques de degré $n$.
+Notons $Z$ l'image de $Y_0(n)$, $S$ la courbe définie par $\Phi_n$. Le cas complexe montre que $Z$ et $S$ ont même fibre générique. D'autre part, on a vu que $\Phi_n$ est irréductible donc $S$ est plat, et d'autre part $Z$ est plat car $Y_0(n)$ et $Y$ le sont. Ainsi ces deux schémas sont l'adhérence de leur fibre générique, donc sont égaux.
 
-\end{cor}
 
-\begin{prop}
+\begin{rem}
 
-Constructions de $Y_1(n)_{\Z\left[\frac{1}{n}\right]}$, $Y(n)_{\Z\left[\frac{1}{n},\zeta_n\right]}$.
+On peut éviter de se restreindre aux cas où $n$ est inversible dans $k$ : il faut alors reformuler le problème de $n$-isogénies et trouver un modèle de $Y_0(n)$ qui est plat sur $\Spec\Z$.
 
-\end{prop}
+\end{rem}
+
+Il reste également à caractériser les points singuliers de $Y_0(n)\vers Y\times Y$ : ?
+
+
+\newpage
 
 \section{Cryptosystème et algorithmes}
 
@@ -278,7 +514,7 @@ décider de quelle distribution le triplet provient.
 
 \textbf{Problème 2 (Computational Diffie-Hellman ou CDH).} \'Etant donnés $G$ cyclique d'ordre $N$, $g$ un générateur, $g^a,g^b\in G$, calculer $g^{ab}$.
 
-Ces problèmes, que l'on croit difficiles (une \emph{preuve} de cette difficulté montrerait en particulier le fameux P $\neq$ NP), sont à la base de la sécurité de l'échange de clé de Diffie-Hellman, où Alice et Bob choisissent chacun respectivement $a$ et $b$, s'échangent $g^a$ et $g^b$ et connaissent ensuite chacun la clé commune $g^{ab}=(g^a)^b=(g^b)^a$.
+Ces problèmes, que l'on croit difficiles (une \emph{preuve} de cette difficulté montrerait en particulier que P $\neq$ NP), sont à la base de la sécurité de l'échange de clé de Diffie-Hellman, où Alice et Bob choisissent chacun respectivement $a$ et $b$, s'échangent $g^a$ et $g^b$ et connaissent ensuite chacun la clé commune $g^{ab}=(g^a)^b=(g^b)^a$.
 
 Ce schéma peut ensuite être appliqué pour toutes sortes de groupes, par exemple le groupe multiplicatif ou une courbe elliptique sur un corps fini. On peut également citer le problème du logarithme discret (DLP), qui consiste, étant donnés $G$, un générateur $g$ et un élément $h$, à calculer un entier $a$ tel que $g^a=h$. La difficulté des problèmes à la Diffie-Hellman repose à son tour sur la difficulté du DLP.
 
@@ -288,13 +524,13 @@ D'autres problèmes susceptibles de donner lieu à des protocoles de cryptage so
 
 \textbf{Problème 3 (Version computationnelle)} \'Etant donné un groupe abélien $G$ agissant sur un ensemble $X$ de façon simplement transitive, et des éléments $x_0, a\cdot x_0, b\cdot x_0\in X$, calculer $ab\cdot x_0$.
 
-On peut aussi donner une version décisionnelle de ce problème. Comme dans le cas de Diffie-Hellman, on a un échange de clé naturel fondé sur ce problème : $G, X$ et $x_0$ étant des données publiques, Alice et Bob choisissent chacun $a,b\in G$ et s'échangent $a\cdot x_0$, $b\cdot x_0$, et peuvent alors chacun calculer $a\cdot b\cdot x_0=b\cdot a\cdot x_0$, puisque le groupe $G$ est abélien. De fait, l'échange de Diffie-Hellman est une version de ce schéma plus général pour $\Z/N\Z$ agissant sur $\langle g\rangle$ par puissances.
+On peut aussi donner une version décisionnelle de ce problème. Comme dans le cas de Diffie-Hellman, on a un échange de clé naturel fondé sur ce problème : $G, X$ et $x_0$ étant des données publiques, Alice et Bob choisissent chacun $a,b\in G$ et s'échangent $a\cdot x_0$, $b\cdot x_0$, et peuvent alors chacun calculer $a\cdot b\cdot x_0=b\cdot a\cdot x_0$, puisque le groupe $G$ est abélien. De fait, l'échange de Diffie-Hellman est une version de ce schéma plus général pour $(\Z/N\Z)^*$ agissant sur $\langle g\rangle$ par puissances.
 
 La difficulté de ce problème repose notamment sur la difficulté d'\og inverser\fg\ l'action de $G$ sur $X$.
 
 \vspace{5mm}
 
-Le cryptosystème décrit dans l'article de Rostovtsel et Stolbunov consiste à utiliser l'action du groupe de classe d'un ordre quadratique $\O$ sur l'ensemble $\Ell_k(\O)$ lorsqu'il est non vide, où $k$ est un corps fini. En représentant les éléments de $\Cl(\O)$ comme des produits d'idéaux dont la norme est un petit nombre premier (ce qui est possible en supposant GRH ?), cela revient concrètement à se déplacer dans un graphe $G$ obtenu comme la superposition de plusieurs graphes de $\ell$-isogénies $G_\ell(k)$, où $\ell$ est un nombre premier qui est scindé dans $K=\O\otimes\Q$.
+Le cryptosystème décrit dans l'article de Rostovtsev et Stolbunov consiste à utiliser l'action du groupe de classe d'un ordre quadratique $\O$ sur l'ensemble $\Ell_k(\O)$ lorsqu'il est non vide, où $k$ est un corps fini. En représentant les éléments de $\Cl(\O)$ comme des produits d'idéaux dont la norme est un petit nombre premier (ce qui est possible en supposant GRH ?), cela revient concrètement à se déplacer dans un graphe $G$ obtenu comme la superposition de plusieurs graphes de $\ell$-isogénies $G_\ell(k)$, où $\ell$ est un nombre premier qui est scindé dans $K=\O\otimes\Q$.
 
 Pouvoir calculer efficacement l'action de $\Cl(\O)$ sur $X=\Ell_k(\O)$, dont les éléments sont représentés par un $j$-invariant et une équation dans $k$, revient alors à répondre à deux questions :
 \begin{itemize}
@@ -303,6 +539,10 @@ Pouvoir calculer efficacement l'action de $\Cl(\O)$ sur $X=\Ell_k(\O)$, dont les
 \end{itemize}
 
 On peut répondre à la première question grâce aux polynômes de division ou aux polynômes modulaires, et à la seconde en regardant l'action du Frobenius sur les points du noyau de l'isogénie.
+
+
+
+\newpage
 
 \subsection{Calcul à l'aide d'un polynôme de division}
 
@@ -314,46 +554,12 @@ Une fois déterminés un facteur de degré $\ell$ de $\psi_\ell$ dans $k[X]$, on
 
 D'un point de vue algorithmique, cette méthode demande de factoriser entièrement un polynôme de degré $\frac{\ell^2-1}{2}$, ce qui se révèle trop coûteux. De plus, il n'est pas garanti de trouver des facteurs de degré exactement $l$ ; il faut dans certains cas recombiner des facteurs de degré plus petit, ce qui ajoute une difficulté supplémentaire.
 
+
+\newpage
+
 \subsection{Calcul à l'aide d'une équation modulaire}
 
-Au lieu de rechercher directement le polynôme définissant le noyau de l'isogénie, on peut utiliser les propriétés de la \emph{courbe modulaire} $\Gamma_0(\ell)$, qui paramétrise les couples de $j$-invariants de courbes ellipiques reliées par des isogénies (cycliques) de degré $\ell$. Plus précisément, on a le théorème suivant.
-
-\begin{defi}
-Soit $m\geq 1$ un entier. On définit
-$$C(m)=\left\{ 
-\left(
-\begin{matrix}
-a & b \\
-0 & d 
-\end{matrix}
-\right)
-\in \M_2(\Z)\ :\ ad=m,\ a>0,\ 0\leq b<d,\ \mathrm{pgcd}(a,b,d)=1\right\}.$$
-\end{defi}
-
-\begin{lem}
-Les $(\sigma^{-1}\Gamma(1)\sigma)\cap \Gamma(1)$ pour $\sigma\in C(m)$ sont exactement les classes à droite de $\Gamma_0(m)$ dans $\Gamma(1)$.
-\end{lem}
-
-\begin{thm}[Polynômes modulaires classiques]
-
-Soit $m\geq 1$ un entier. Il existe un unique  polynôme $\Phi_m \in \Z[X,Y]$, appelé \emph{polynôme modulaire} de degré $m$, tel que
-$$\forall \tau\in\H,\ \Phi_m(X,j(\tau))=\prod_{\sigma\in C(m)} (X-j(\sigma\tau)).$$
-De plus, on a les propriétés suivantes :
-
-\begin{itemize}
-\item[(i)] $\Phi_m(X,Y)=\Phi_m(Y,X)$,
-\item[(ii)] $\Phi_m(X,Y)$ est irréductible en $X$,
-\item[(iii)] Si $m$ n'est pas un carré, alors $\Phi_m(X,X)$ est non constant et de coefficient dominant $\pm 1$,
-\item[(iv)] Si $m=p$ est un nombre premier, on a la \emph{relation de congruence de Kronecker} :
-$$\Phi_p(X,Y) = (X^p-Y)(X-Y^p) \: \mathrm{mod}\ p,$$
-\item[(v)] Pour tout corps $k$, pour toutes courbes elliptiques $E_1,E_2$ sur $k$ de $j$-invariants $j_1$ et $j_2$, on a $\Phi_m(j_1,j_2)=0$ si et seulement si il existe une isogénie $E_1 \vers E_2$ (ou une tordue) définie sur $k$ et cyclique de degré $m$.
-\end{itemize}
-
-\end{thm}
-
-On peut voir $\Phi_m$ comme \emph{l'équation canonique} de la courbe modulaire $\Gamma_0(m)$. Ses propriétés sont démontrées dans ... Pour étendre $(v)$ au cas d'un corps fini, on peut utiliser un théorème de relèvement à la Deuring ?
-
-\vspace{5mm}
+Au lieu de rechercher directement le polynôme définissant le noyau de l'isogénie, on peut utiliser les propriétés de la courbe modulaire $Y_0(\ell)_k$, qui paramétrise les couples de $j$-invariants de courbes ellipiques reliées par des isogénies (cycliques) de degré $\ell$. 
 
 La stratégie de calcul est alors la suivante : étant donné un invariant $j$ dans $\Ell_k(\O)$, on sait par les résultats précédents et $(v)$ que $\Phi_\ell(j,Y)$ admet exactement deux racines dans $k$. Pour chacune des deux racines, on peut ensuite calculer l'isogénie correspondante à l'aide de formules explicites. Cette stratégie nécessite de calculer deux racines d'un polynôme de degré $\ell$, ce qui est a priori moins coûteux que de factoriser le polynôme de division.
 
@@ -364,6 +570,10 @@ Les polynômes modulaires ont cependant le désavantage d'avoir d'énormes coeff
 Cette stratégie fait donc intervenir trois calculs de racines. Les polynômes d'Atkin sont toutefois sensiblement plus légers que les $\Phi_\ell$, ce qui permet un calcul plus rapide, mais cette méthode a le désavantage de pouvoir échouer : en effet, il n'y a pas de raison a priori pour que $A_\ell(F,j)$ ait exactement deux racines, etc.
 
 Un exemple précis où ça échoue ?
+
+
+
+\newpage
 
 
 \subsection{Détermination de la direction}
@@ -390,6 +600,8 @@ Ainsi l'égalité $(\pi-\lambda)(\pi-\mu)=0$ a lieu dans $\O/\frak l \times \O/\
 Alors si $P$ est un point de $E[\ell](\bar{k})$, $P$ est tué par $\frak l$ si et seulement si $P$ est vecteur propre pour $\pi$ associé à $\lambda$.
 
 
+\newpage
+
 
 \subsection{Calcul à l'aide de torsion rationnelle}
 
@@ -405,6 +617,9 @@ Pour conclure l'algorithme, il reste à trouver un point rationnel de $\ell$-tor
 En réalité, il est plus rapide de ne pas calculer du tout les équations pour $\phi$, uniquement les équations de la courbe image, et récupérer des points de torsion rationnels ad hoc à chaque fois.
 
 Ce mode de calcul ne fait pas intervenir de factorisation de polynôme dans $\F_p$ ni de recherche de racines, et ne fait pas intervenir les polynômes modulaires. Il est donc beaucoup plus efficace que les méthodes précédentes pour calculer dans le graphe. En revanche il ne permet de choisir qu'une seule direction, et (surtout) il nécessite de trouver une courbe adéquate.
+
+
+\newpage
 
 \subsection{Recherche de la courbe}
 
@@ -476,7 +691,13 @@ ce qui est beaucoup trop cher.
 
 
 
+\newpage
 
+\nocite{*}
+
+\bibliographystyle{plain}
+
+\bibliography{biblio}
 
 
 \end{document}
