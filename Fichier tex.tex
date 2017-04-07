@@ -25,18 +25,19 @@
 \renewcommand{\b}{\backslash}
 \newcommand{\vers}{\rightarrow}
 \newcommand{\End}{\mathrm{End}}
+\newcommand{\Hom}{\mathrm{Hom}}
 \newcommand{\Ell}{\mathcal{E}\ell\ell}
 \newcommand{\Spec}{\mathrm{Spec}\,}
 \renewcommand{\frak}{\mathfrak}
 \newcommand{\de}{\,:\,}
 
-\newtheorem{thm}{Théorème}[subsection]
-\newtheorem{lem}[thm]{Lemme}
-\newtheorem{prop}[thm]{Proposition}
-\newtheorem{cor}[thm]{Corollaire}
+\newtheorem*{thm}{Théorème}
+\newtheorem*{lem}{Lemme}
+\newtheorem*{prop}{Proposition}
+\newtheorem*{cor}{Corollaire}
 \theoremstyle{definition}
 \newtheorem*{rem}{Remarque}
-\newtheorem{defi}[thm]{Définition}
+\newtheorem*{defi}{Définition}
 
 \title{titre}
 
@@ -54,7 +55,7 @@
 
 \newpage
 
-\section{Multiplication complexe et graphe d'isogénies}
+\section{Classes d'isogénies de courbes elliptiques CM}
 
 \subsection{Courbes elliptiques}
 
@@ -230,7 +231,7 @@ A l'aide de cette identification, on peut maintenant définir comme précédemme
 
 \begin{prop}
 
-Pour tout idéal $\frak a$ inversible de $\O$ de norme première à $p$, le sous-groupe $E[\frak a](\bar{k}\subset E(\bar{k})$ est de cardinal $N(\frak a)$.
+Pour tout idéal $\frak a$ inversible de $\O$ de norme première à $p$, le sous-groupe $E[\frak a](\bar{k})$ de $ E(\bar{k})$ est de cardinal $N(\frak a)$.
 
 \end{prop}
 
@@ -273,51 +274,105 @@ Une façon peut-être plus naturelle d'adapter aux corps finis les résultats ob
 
 \newpage
 
-\subsection{Théorèmes de Tate}
+\subsection{Modules de Tate}
 
 
-
-
-\newpage
-
-\subsection{Le graphe d'isogénies}
-
-Cf Sutherland.
-
-Dans cette partie, on fixe un nombre premier $l$ (différent de la caractéristique de $k$ ?)
+Pour l'instant, on se donne un corps quelconque $k$.
 
 \begin{defi}
-Le \emph{graphe de $l$-isogénies} sur $k$, noté $G_l(k)$, est le graphe non orienté $(V,E)$ où :
-\begin{itemize}
-\item $V$ est l'ensemble des courbes elliptiques définies sur $k$ à $\bar{k}$-isomorphisme près (le $j$-invariant donne une bijection $V\vers k$).
-\item $E$ contient un exemplaire de l'arête $(E_1,E_2)$ pour chaque classe d'isomorphisme d'isogénies $E_1\vers E_2$ de degré $l$. (Le graphe est bien non orienté vu l'existence de l'isogénie duale).
-\end{itemize}
+
+On rappelle la définition bien connue des modules de Tate pour une courbe elliptique $E/k$ (cette définition a un sens dans un cadre plus général, celui des variétés abéliennes). Si $\ell$ est un nombre premier, on a des applications
+$$ [\ell] \de E[\ell^{m+1}](\bar{k})\vers E[\ell^{m}](\bar{k})$$
+
+et on définit le \emph{module de Tate}
+$$T_\ell(E) = \lim_{\leftarrow} E[\ell^m](\bar{k}).$$
+
+On a donc une identification canonique $E[\ell^m]\simeq T_\ell(E)/ \ell^{m} T_\ell(E)$.
+
+Si $\ell$ est différent de la caractéristique de $k$, on sait que $E[\ell]$ est étale de rang $\ell^2$, donc $T_\ell(E)$ est un $\Z_\ell$-module libre de rang 2. On peut donc le voir comme un réseau dans le $\Q_\ell$-espace vectoriel de dimension 2
+$$V_\ell(E) = T_\ell(E) \otimes_{\Z_\ell} \Q_\ell.$$
+
+Le diagramme suivant est alors commutatif :
+$$
+\shorthandoff{;:!?}
+\xymatrix {
+\ell^{-m} T_\ell(E)/ T_\ell(E) \ar[r]_{\ell^m}^{\sim} \ar@{^{(}->}[dd]&
+ T_\ell(E)/ l^m T_\ell(E) \ar[r]^{\sim}  & 
+ E[\ell^m](\bar{k}) \ar@{^{(}->}[dd] \\ 
+ \\
+ \ell^{-m-1} T_\ell(E)/ T_\ell(E) \ar[r]_{\ell^{m+1}}^{\sim} &
+ T_\ell(E)/ \ell^{m+1} T_\ell(E) \ar[r]^{\sim}  & 
+ E[\ell^{m+1}](\bar{k})
+}
+$$
+
+ce qui donne une identification canonique avec les points $l$-primaires de la courbe,
+$$ V_\ell(E)/ T_\ell(E) \simeq E(\ell)(\bar{k}).$$
+
+Avec cette identification, les sous-groupes $\ell$-divisibles de $E(\bar{k})$ correspondent aux réseaux de $V_\ell(E)$ contenant $T_\ell(E)$. Tous ces objets sont munis de plus d'une action naturelle du groupe de Galois $G= \mathrm{Gal}(\bar{k}/k)$.
 
 \end{defi}
 
+Si $\phi\de E\vers E'$ est une isogénie définie sur $k$, ses restrictions $E[\ell^m](\bar{k})\vers E'[\ell^m](\bar{k})$ sont compatibles, et $\phi$ induit donc naturellement une application
+$$ \phi_\ell\de T_\ell(E)\vers T_\ell(E').$$
 
+Cette application est un morphisme de $\Z_\ell[G]$-modules, que l'on peut également considérer de $V_\ell(E)$ dans $V_\ell(E')$. Avec ces notations, on a le théorème suivant, dû à Tate :
 
-\begin{prop}
+\begin{thm} Si $k$ est un corps fini, cette application
+$$\Hom_k(E, E') \vers \Hom_{\Z_\ell[G]} (T_\ell(E), T_\ell(E'))$$
 
-Les isogénies horizontales correspondent à l'action du groupe de classe de $\O$: une courbe elliptique de départ $E$ étant donnée, on a la bijection
+est un isomorphisme.
+\end{thm}
+
+On suppose maintenant que \emph{$k$ est un corps fini}. Connaissant ce résultat, on peut faire le lien entre les isogénies et les sous-groupes de $E(\bar{k})$, les isogénies, les réseaux dans les modules de Tate et les idéaux de l'anneau d'endomorphisme, et démontrer la simple transitivité de l'action de $\Cl(\O)$ sur $\Ell_k(\O)$.
+
+\begin{rem}
+
+Cet isomorphisme est valable uniquement dans le cas $\ell\neq p$, si $k$ est de caractéristique $p$. Dans le cas $\ell=p$, on peut construire un autre $\Z_p[G]$-module qui vérifie le même genre de propriétés, mais sa construction est plus complexe : cf. Waterhouse. Ici on se concentre sur le cas $\ell\neq p$.
+
+\end{rem}
+
+Dans ce cadre, le lemme fondamental reliant l'anneau d'endomorphismes aux modules de Tate est le suivant. Ici on fixe un isomorphisme $\O\vers \End(E)$ que l'on rend cohérent dans une classe d'isogénie, par exemple celui que l'on a défini à la section précédente.
+
+\begin{lem}
+
+Soit $\ell\neq p$ un nombre premier, $\frak a$ un idéal de $\O$, et $\phi\de E\vers E' = E/E[\frak a]$ l'isogénie quotient. Alors on a l'égalité
+
+$$\phi_\ell^{-1} T_\ell(E') = \bigcap_{\rho\in\frak a}\ \rho_\ell^{-1} T_\ell(E) .$$
+\end{lem}
+
+Cela permet de décrire la localisation de l'idéal $\frak a$ en $l$ en termes de modules de Tate. On utilise de plus le résultat bien connu qu'un réseau est déterminé par ses localisations :
+
+\begin{lem}[Weil-Eischle] L'application
 
 $$\begin{aligned}
-& \left\{\text{\emph{Isogénies horizontales}}\right\} & \longleftrightarrow &\quad \{\text{\emph{Classes d'idéaux de}}\ \O \} &\\
-& \quad\qquad\qquad \alpha & \longmapsto &\ \ \{\phi\in\O\ :\ \mathrm{Ker}\,\alpha \subset\mathrm{Ker}\,\phi\} &\\
-& \quad\qquad\qquad \phi_{\frak a} & \longleftarrow & \quad\qquad\qquad \frak a &
+\mathcal{R}(\Q^n) &\longrightarrow \prod_{\ell\in \mathcal{P}} \mathcal{R}(\Q_\ell^n) \\
+\Lambda\ \ &\longmapsto (\Lambda_\ell = \Lambda\otimes_\Z \Z_\ell)_{\ell\in\mathcal{P}}
 \end{aligned}$$
 
-\end{prop}
+est une injection d'image l'ensemble des collections $(\Lambda_\ell)$ telles que $\Lambda_\ell = \Z_\ell$ pour presque tout $\ell$.
+\end{lem}
 
-C'est une reformulation de l'action simplement transitive de la section précédente.
+On peut ensuite démontrer sans trop de difficulté le théorème suivant.
 
-Vu en termes de l'action de $\Cl(\O)$ sur l'ensemble $Ell_k(\O)$, on s'intéresse à l'action des $\O$-idéaux de norme $l$. Si $l$ divise l'indice de $\O$ dans $\O_K$, il n'existe pas de tel idéal. Sinon, il y a 0, 1 ou 2 tels idéaux selon si $l$ est inerte, ramifié ou scindé dans $K$.
+\begin{thm}
 
-Selon les cas, on a donc une bonne description des isogénies horizontales (simplement, deux idéaux distincts dans $K$ peuvent se trouver égaux dans le groupe de classe).
+Soit $k$ un corps fini, $E_0/k$ une courbe elliptique ordinaire ayant multiplication complexe par un ordre $\O$ d'un corps quadratique $K$. Alors tout idéal de $\O$ est un idéal de noyau pour toute courbe elliptique telle que $\End(E)=\O$. De plus, $\Ell_k(\O)$ est un espace principal homogène pour $\Cl(\O)$.
 
-Deux courbes isogènes ayant même cardinal, une courbe elliptique dans une certaine composante connexe du graphe de $l$-isogénies a son anneau d'endomorphismes compris entre $\Z[\pi]$ et $\O_K$. Il n'y a donc pas d'isogénies verticales si et seulement si $l$ ne divise pas le conducteur de $\Z[\pi]$.
+\end{thm}
 
-On peut montrer que les composantes connexes du graphe de $l$-isogénies ont une structure particulière : ce sont des \emph{volcans}.
+
+\begin{proof}
+
+Comme on l'a dit, on va regarder uniquement les premiers $\ell\neq p$ ; les résultats sont similaires dans le cas $\ell = p$, et on les admet ici.
+
+On démontre tout d'abord la transitivité. Soient $E,\ E'$ deux courbes d'ordre $\O$. En particulier $E$ et $E'$ ont même nombre de points, donc il existe une isogénie $E \vers E'$ que l'on peut supposer séparable : ainsi il existe un sous-groupe fini $G\subset E(\bar{k})$ tel que $E' = E/G$.
+
+Cherchons un idéal $I$ tel que $G = E[I]$. Pour $\ell\neq p$, $G$ correspond à un réseau contenant $T_\ell E$, donc un sous-réseau de $S_\ell E$ : comme $S_\ell E$ est libre de rang 1, ce réseau s'écrit sous la forme $I_\ell \cdot S_\ell E$ pour un certain idéal $I_\ell$.
+
+Comme $G$ est fini, $I_\ell$ est trivial pour presque tout $\ell$. Il existe donc un réseau $I$ de $K$ dont les localisations sont les $I_\ell$. $I$ est alors un idéal puisque c'en est un localement, et on vérifie ensuite $G = E[I]$, ce qui montre la transitivité.
+
+\end{proof}
 
 
 
@@ -466,11 +521,13 @@ Il existe un schéma $Y_0(n)\vers \Spec \Z\left[\frac{1}{n}\right]$ ayant les pr
 
 \begin{itemize}
 
-\item{(i)} $Y_0(n)$ est une solution du problème modulaire pour $\Gamma_0(n)$, au sens où pour tout corps $k$ dans lequel $n$ est inversible, les $k$-points de $Y_0(n)$ sont en bijection avec les classes d'isomorphisme (sur $\bar{k}$) d'isogénies cycliques de degré $n$ entre deux courbes elliptiques sur $k$.
+\item[(i)] $Y_0(n)$ est une solution du problème modulaire pour $\Gamma_0(n)$, au sens où pour tout corps $k$ dans lequel $n$ est inversible, les $k$-points de $Y_0(n)$ sont en bijection avec les classes d'isomorphisme (sur $\bar{k}$) d'isogénies cycliques de degré $n$ entre deux courbes elliptiques sur $k$.
 
-\item{(ii)} $Y_0(n)\vers \Spec \Z\left[\frac{1}{n}\right]$ est fini et plat.
+\item[(ii)] $Y_0(n)\vers \Spec \Z\left[\frac{1}{n}\right]$ est fini et plat.
 
-\item({iii)} On dispose d'un morphisme de schémas 
+\item[(iii)] $Y_0(n)$ est lisse en caractéristique $p$.
+
+\item[(iv)] On dispose d'un morphisme de schémas 
 $$Y_0(n) \vers Y\times Y$$
 où $Y$ est l'espace affine de dimension 1, qui sur $\C$ devient l'application étudiée précédemment.
 
@@ -489,8 +546,9 @@ On peut éviter de se restreindre aux cas où $n$ est inversible dans $k$ : il f
 
 \end{rem}
 
-Il reste également à caractériser les points singuliers de $Y_0(n)\vers Y\times Y$ : ?
+Il reste également à caractériser les points singuliers de $Y_0(n)\vers Y\times Y$ : on peut en fait montrer que ceux-ci sont des réductions de points singuliers sur $\Z$, c'est à dire de l'un des cas discutés ci-dessus. En effet dans le cas contraire, on aurait un ouvert Zariski autour de ce point qui serait régulier en codimension 1. Cela montre par des arguments classiques que la courbe donnée par $\Phi_n=0$ est normale sur $\F_p$. Or la normalisation de $\Phi_n=0$ est précisément la courbe modulaire $Y_0(n)$ qui est lisse en caractéristique $p$ : contradiction.
 
+Ainsi en dehors des points singuliers, le polynôme modulaire permet bien de caractériser les isogénies de degré $l$ sur tout corps.
 
 \newpage
 
@@ -503,39 +561,30 @@ Il reste également à caractériser les points singuliers de $Y_0(n)\vers Y\tim
 
 La sécurité de nombreux cryptosystèmes à clefs publiques est basée sur la difficulté supposée d'un problème mathématique. On considère qu'un tel problème est \emph{difficile} s'il n'existe pas d'algorithme fonctionnant en temps polynomial qui, recevant en entrée les données du problème, en donne la solution avec probabilité supérieure à $\frac{1}{2}+\varepsilon(n)$ (pour un problème décisionnel) ou $\varepsilon(n)$ (pour un problème computationnel), où $\varepsilon$ est une fonction négligeable devant les polynômes et $n$ est le \emph{paramètre de sécurité} du système, typiquement la taille des données (par exemple $\log(N)$ pour un groupe de cardinal $N$).
 
-L'un des problèmes les plus connus a été proposé par Diffie et Hellman :
+L'un des types de problèmes que l'on peut utiliser de fonde sur la difficulté d'"inverser" l'action d'un groupe abélien, et se formule de la manière suivante :
 
-\textbf{Problème 1 (Decisional Diffie-Hellman ou DDH).} \'Etant donné un groupe $G$ cyclique d'ordre $N$ et un générateur $g$ de $G$, et un triplet $(g^x,g^y,g^z)$ où
+\textbf{Problème HHS}, pour \og hard homogeneous spaces \fg. \'Etant donné un groupe abélien $G$ agissant sur un ensemble $X$ de façon simplement transitive, et des éléments $x_0, a\cdot x_0, b\cdot x_0\in X$, calculer $ab\cdot x_0$.
+
+On peut aussi donner une version décisionnelle de ce problème. On dispose ensuite d'un échange de clé naturel : $G, X$ et $x_0$ étant des données publiques, Alice et Bob choisissent chacun $a,b\in G$ et s'échangent $a\cdot x_0$, $b\cdot x_0$, et peuvent alors chacun calculer $a\cdot b\cdot x_0=b\cdot a\cdot x_0$, puisque le groupe $G$ est abélien. La sécurité de ce protocole repose notamment sur la non-existence d'algorithmes polynomiaux calculant $g$ à partir de $x_0$ et $g\cdot x_0$.
+
+\vspace{5mm}
+
+Le cryptosystème décrit dans l'article de Rostovtsev et Stolbunov consiste à utiliser l'action du groupe de classe d'un ordre quadratique $\O$ sur l'ensemble $\Ell_k(\O)$ lorsqu'il est non vide, où $k$ est un corps fini. De façon concrète :
+
 \begin{itemize}
-\item Avec probabilité $\frac{1}{2}$, $x,y$ sont tirés au hasard dans $\Z/N$ et $z=xy$
-\item Avec probabilité $\frac{1}{2}$, $x,y,z$ sont tirés au hasard dans $\Z/N$,
-décider de quelle distribution le triplet provient.
+
+\item Un élément de $\Ell_k(\O)$ est représenté par son $j$-invariant, c'est à dire un élément de $k$.
+\item Un élément de $\Cl(\O)$ est représenté comme un idéal, décomposé contre des idéaux dont la norme est un petit premier. En pratique, on choisit pour chaque premier $\ell$ un certain idéal $\frak l$ de norme $l$ s'il en existe, et on représente par une liste $[a_1,\ a_2,\dots]$ l'idéal $\prod {\frak l}_i^{a_i}$.
+
 \end{itemize}
 
-\textbf{Problème 2 (Computational Diffie-Hellman ou CDH).} \'Etant donnés $G$ cyclique d'ordre $N$, $g$ un générateur, $g^a,g^b\in G$, calculer $g^{ab}$.
+Rappelons que l'action d'un idéal de norme $\ell$ est donnée par les isogénies de degré $\ell$. Pouvoir calculer l'action de ce groupe revient alors à répondre à deux questions :
 
-Ces problèmes, que l'on croit difficiles (une \emph{preuve} de cette difficulté montrerait en particulier que P $\neq$ NP), sont à la base de la sécurité de l'échange de clé de Diffie-Hellman, où Alice et Bob choisissent chacun respectivement $a$ et $b$, s'échangent $g^a$ et $g^b$ et connaissent ensuite chacun la clé commune $g^{ab}=(g^a)^b=(g^b)^a$.
-
-Ce schéma peut ensuite être appliqué pour toutes sortes de groupes, par exemple le groupe multiplicatif ou une courbe elliptique sur un corps fini. On peut également citer le problème du logarithme discret (DLP), qui consiste, étant donnés $G$, un générateur $g$ et un élément $h$, à calculer un entier $a$ tel que $g^a=h$. La difficulté des problèmes à la Diffie-Hellman repose à son tour sur la difficulté du DLP.
-
-\vspace{5mm}
-
-D'autres problèmes susceptibles de donner lieu à des protocoles de cryptage sont construits à partir d'une action de groupe :
-
-\textbf{Problème 3 (Version computationnelle)} \'Etant donné un groupe abélien $G$ agissant sur un ensemble $X$ de façon simplement transitive, et des éléments $x_0, a\cdot x_0, b\cdot x_0\in X$, calculer $ab\cdot x_0$.
-
-On peut aussi donner une version décisionnelle de ce problème. Comme dans le cas de Diffie-Hellman, on a un échange de clé naturel fondé sur ce problème : $G, X$ et $x_0$ étant des données publiques, Alice et Bob choisissent chacun $a,b\in G$ et s'échangent $a\cdot x_0$, $b\cdot x_0$, et peuvent alors chacun calculer $a\cdot b\cdot x_0=b\cdot a\cdot x_0$, puisque le groupe $G$ est abélien. De fait, l'échange de Diffie-Hellman est une version de ce schéma plus général pour $(\Z/N\Z)^*$ agissant sur $\langle g\rangle$ par puissances.
-
-La difficulté de ce problème repose notamment sur la difficulté d'\og inverser\fg\ l'action de $G$ sur $X$.
-
-\vspace{5mm}
-
-Le cryptosystème décrit dans l'article de Rostovtsev et Stolbunov consiste à utiliser l'action du groupe de classe d'un ordre quadratique $\O$ sur l'ensemble $\Ell_k(\O)$ lorsqu'il est non vide, où $k$ est un corps fini. En représentant les éléments de $\Cl(\O)$ comme des produits d'idéaux dont la norme est un petit nombre premier (ce qui est possible en supposant GRH ?), cela revient concrètement à se déplacer dans un graphe $G$ obtenu comme la superposition de plusieurs graphes de $\ell$-isogénies $G_\ell(k)$, où $\ell$ est un nombre premier qui est scindé dans $K=\O\otimes\Q$.
-
-Pouvoir calculer efficacement l'action de $\Cl(\O)$ sur $X=\Ell_k(\O)$, dont les éléments sont représentés par un $j$-invariant et une équation dans $k$, revient alors à répondre à deux questions :
 \begin{itemize}
-\item \'Etant donnés $j,A,B,\ell$, comment calculer les $j$-invariants voisins dans le graphe de $\ell$-isogénies ? Comment calculer une équation de Weierstrass de la courbe image ?
+
+\item \'Etant donnés $j_0$, comment calculer les $j$-invariants reliés à $j_0$ par une isogénie de degré $\ell$ ?
 \item \'Etant donné un nombre premier $\ell$ qui se scinde en deux idéaux $\frak l,\bar{\frak l}$, comment distinguer l'action de $\frak l$ et l'action de $\bar{\frak l}$ ?
+
 \end{itemize}
 
 On peut répondre à la première question grâce aux polynômes de division ou aux polynômes modulaires, et à la seconde en regardant l'action du Frobenius sur les points du noyau de l'isogénie.
@@ -548,11 +597,11 @@ On peut répondre à la première question grâce aux polynômes de division ou 
 
 Partons du constat suivant : si $\phi\de E\vers E'$ est une isogénie séparable de degré $\ell$, alors son noyau est un sous-groupe de $E(\bar{k})$ de cardinal $\ell$. Il est de plus stable par $[-1]$, donc en écrivant une équation de Weierstrass réduite pour $E$, il existe un polynôme $K_\phi$ de degré $\frac{\ell-1}{2}$ dont les racines sont les coordonnées $x$ des points affines de Ker\,$\phi$. Si $\phi$ est définie sur $k$, alors $K_\phi$ est à coefficients dans $k$ (c'est évident en regardant l'action de Galois).
 
-Or les points de Ker\,$\phi$ sont de $\ell$-torsion, donc des points de $E[\ell](\bar{k})$ : par conséquent le polynôme $K_\phi$ doit diviser le $\ell$-ième polynôme de division $\psi_\ell$ de la courbe $E$, qui peut s'exprimer (difficilement) en terme des coefficients de l'équation de $E$ et est de degré $\frac{\ell^2-1}{2}$.
+Or les points de Ker\,$\phi$ sont de $\ell$-torsion, donc des points de $E[\ell](\bar{k})$ : par conséquent le polynôme $K_\phi$ doit diviser le $\ell$-ième polynôme de division $\psi_\ell$ de la courbe $E$, qui peut s'exprimer en terme des coefficients de l'équation de $E$ et est de degré $\frac{\ell^2-1}{2}$.
 
 Une fois déterminés un facteur de degré $\ell$ de $\psi_\ell$ dans $k[X]$, on peut calculer l'isogénie correspondante et le $j$-invariant (et une équation) de la courbe image à l'aide de formules explicites.
 
-D'un point de vue algorithmique, cette méthode demande de factoriser entièrement un polynôme de degré $\frac{\ell^2-1}{2}$, ce qui se révèle trop coûteux. De plus, il n'est pas garanti de trouver des facteurs de degré exactement $l$ ; il faut dans certains cas recombiner des facteurs de degré plus petit, ce qui ajoute une difficulté supplémentaire.
+D'un point de vue algorithmique, cette méthode demande de factoriser entièrement un polynôme de degré $\frac{\ell^2-1}{2}$. Il n'est pas garanti de trouver des facteurs de degré exactement $l$ ; il faut dans certains cas recombiner des facteurs de degré plus petit, ce qui ajoute une difficulté supplémentaire.
 
 
 \newpage
@@ -561,7 +610,7 @@ D'un point de vue algorithmique, cette méthode demande de factoriser entièreme
 
 Au lieu de rechercher directement le polynôme définissant le noyau de l'isogénie, on peut utiliser les propriétés de la courbe modulaire $Y_0(\ell)_k$, qui paramétrise les couples de $j$-invariants de courbes ellipiques reliées par des isogénies (cycliques) de degré $\ell$. 
 
-La stratégie de calcul est alors la suivante : étant donné un invariant $j$ dans $\Ell_k(\O)$, on sait par les résultats précédents et $(v)$ que $\Phi_\ell(j,Y)$ admet exactement deux racines dans $k$. Pour chacune des deux racines, on peut ensuite calculer l'isogénie correspondante à l'aide de formules explicites. Cette stratégie nécessite de calculer deux racines d'un polynôme de degré $\ell$, ce qui est a priori moins coûteux que de factoriser le polynôme de division.
+La stratégie de calcul est alors la suivante : étant donné un invariant $j$ dans $\Ell_k(\O)$, on sait par les résultats précédents que $\Phi_\ell(j,Y)$ admet exactement deux racines dans $k$. Pour chacune des deux racines, on peut ensuite calculer l'isogénie correspondante à l'aide de formules explicites. Cette stratégie nécessite de calculer deux racines d'un polynôme de degré $\ell$, ce qui est a priori moins coûteux que de factoriser le polynôme de division.
 
 Les polynômes modulaires ont cependant le désavantage d'avoir d'énormes coefficients dans $\Z$. Pour contourner cela, on peut utiliser les polynômes modulaires d'Atkin, qui relient la fonction modulaire $j$ à une fonction modulaire $f$ pour $\Gamma_0(\ell)^*$ :
 
@@ -614,7 +663,7 @@ On dispose ainsi efficacement de la courbe $E'$ voisine de $E$ dans le graphe de
 
 Pour conclure l'algorithme, il reste à trouver un point rationnel de $\ell$-torsion pour $E'$. Celui-ci ne peut pas être obtenu à partir de $Q$, qui est annulé par $\phi$; en revanche (en ayant calculé dès le départ la valeur $C=\#E(\F_p)$) on peut choisir un point au hasard $P'\in E'(\F_p)$ et calculer $Q'=\frac{C}{\ell}\cdot P$ : alors $Q'$ est un point de $\ell$-torsion non nul de $E'$ avec probabilité environ $1-\frac{1}{\ell}$.
 
-En réalité, il est plus rapide de ne pas calculer du tout les équations pour $\phi$, uniquement les équations de la courbe image, et récupérer des points de torsion rationnels ad hoc à chaque fois.
+En réalité, il est plus rapide de ne pas calculer du tout les équations pour $\phi$, uniquement les équations de la courbe image, et récupérer des points de torsion rationnels \emph{ad hoc} à chaque fois.
 
 Ce mode de calcul ne fait pas intervenir de factorisation de polynôme dans $\F_p$ ni de recherche de racines, et ne fait pas intervenir les polynômes modulaires. Il est donc beaucoup plus efficace que les méthodes précédentes pour calculer dans le graphe. En revanche il ne permet de choisir qu'une seule direction, et (surtout) il nécessite de trouver une courbe adéquate.
 
