@@ -1,3 +1,4 @@
+
 # coding: utf-8
 
 # In[ ]:
@@ -93,7 +94,6 @@ def IsogenyGraph(j_0, L, ModPol):
     E_0 = EllipticCurve_from_j(j_0)
     assert E_0.is_ordinary()
     Discr = E_0.frobenius_polynomial().discriminant()
-    print(Discr)
     for l in L:
         assert kronecker_symbol(Discr,l)==1
     for i in range(len(L)):
@@ -709,5 +709,5 @@ def StepWithTorsion_x(E,L,T,Card,i):
         else:
             Qprime=FindRationalTorsion(Eprime,L[i],Card)
             Tprime.append(Qprime)
-	return Eprime,Tprime
+    return Eprime,Tprime
 
